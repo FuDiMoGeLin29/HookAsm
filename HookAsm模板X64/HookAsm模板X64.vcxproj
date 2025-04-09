@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{728e8b50-cfe8-4ec3-9f82-3870b5021d6b}</ProjectGuid>
+    <RootNamespace>HookAsm模板X64</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;HookAsmX64_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;HookAsmX64_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\a64.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64archtraits_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64assembler.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64builder.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64compiler.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64emithelper_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64emitter.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64formatter_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64func_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64globals.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64instapi_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64instdb.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64instdb_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64operand.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64rapass_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64utils.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\armformatter_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\armglobals.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\arm\armoperand.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\asmjit-scope-begin.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\asmjit-scope-end.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\asmjit.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\api-build_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\api-config.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\archcommons.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\archtraits.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\assembler.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\builder.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\codebuffer.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\codeholder.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\codewriter_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\compiler.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\compilerdefs.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\constpool.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\cpuinfo.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\emithelper_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\emitter.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\emitterutils_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\environment.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\errorhandler.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\formatter.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\formatter_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\func.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\funcargscontext_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\globals.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\inst.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\jitallocator.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\jitruntime.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\logger.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\misc_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\operand.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\osutils.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\osutils_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\raassignment_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\rabuilders_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\radefs_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\ralocal_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\rapass_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\rastack_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\string.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\support.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\target.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\type.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\virtmem.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\zone.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonehash.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonelist.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonestack.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonestring.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonetree.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonevector.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86archtraits_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86assembler.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86builder.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86compiler.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86emithelper_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86emitter.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86formatter_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86func_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86globals.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86instapi_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86instdb.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86instdb_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86opcode_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86operand.h" />
+    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86rapass_p.h" />
+    <ClInclude Include="HookAsm\asmtk\asmparser.h" />
+    <ClInclude Include="HookAsm\asmtk\asmtk.h" />
+    <ClInclude Include="HookAsm\asmtk\asmtokenizer.h" />
+    <ClInclude Include="HookAsm\asmtk\elfdefs.h" />
+    <ClInclude Include="HookAsm\asmtk\globals.h" />
+    <ClInclude Include="HookAsm\asmtk\parserutils.h" />
+    <ClInclude Include="HookAsm\asmtk\strtod.h" />
+    <ClInclude Include="HookAsm\capstone\arm.h" />
+    <ClInclude Include="HookAsm\capstone\arm64.h" />
+    <ClInclude Include="HookAsm\capstone\bpf.h" />
+    <ClInclude Include="HookAsm\capstone\capstone.h" />
+    <ClInclude Include="HookAsm\capstone\evm.h" />
+    <ClInclude Include="HookAsm\capstone\m680x.h" />
+    <ClInclude Include="HookAsm\capstone\m68k.h" />
+    <ClInclude Include="HookAsm\capstone\mips.h" />
+    <ClInclude Include="HookAsm\capstone\mos65xx.h" />
+    <ClInclude Include="HookAsm\capstone\platform.h" />
+    <ClInclude Include="HookAsm\capstone\ppc.h" />
+    <ClInclude Include="HookAsm\capstone\riscv.h" />
+    <ClInclude Include="HookAsm\capstone\sh.h" />
+    <ClInclude Include="HookAsm\capstone\sparc.h" />
+    <ClInclude Include="HookAsm\capstone\systemz.h" />
+    <ClInclude Include="HookAsm\capstone\tms320c64x.h" />
+    <ClInclude Include="HookAsm\capstone\tricore.h" />
+    <ClInclude Include="HookAsm\capstone\wasm.h" />
+    <ClInclude Include="HookAsm\capstone\x86.h" />
+    <ClInclude Include="HookAsm\capstone\xcore.h" />
+    <ClInclude Include="HookAsm\HookAsm.h" />
+    <ClInclude Include="HookAsm\HookAsmCodeHeap.h" />
+    <ClInclude Include="main.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64assembler.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64builder.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64compiler.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64emithelper.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64formatter.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64func.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64instapi.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64instdb.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64operand.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64rapass.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\arm\armformatter.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\archtraits.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\assembler.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\builder.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\codeholder.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\codewriter.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\compiler.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\constpool.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\cpuinfo.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\emithelper.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\emitter.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\emitterutils.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\environment.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\errorhandler.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\formatter.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\func.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\funcargscontext.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\globals.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\inst.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\jitallocator.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\jitruntime.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\logger.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\operand.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\osutils.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\ralocal.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\rapass.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\rastack.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\string.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\support.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\target.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\type.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\virtmem.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\zone.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonehash.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonelist.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonestack.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonetree.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonevector.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86assembler.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86builder.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86compiler.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86emithelper.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86formatter.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86func.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86instapi.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86instdb.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86operand.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86rapass.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmparser.cpp" />
+    <ClCompile Include="HookAsm\asmtk\asmtokenizer.cpp" />
+    <ClCompile Include="HookAsm\HookAsm.cpp" />
+    <ClCompile Include="HookAsm\HookAsmCodeHeap.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="HookAsm\EflagsChange.asm">
+      <FileType>Document</FileType>
+    </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="HookAsm\capstone\capstone.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
+</Project>
