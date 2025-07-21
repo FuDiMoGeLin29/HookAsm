@@ -185,6 +185,19 @@ int32_t Asm_Ret();
 /// </summary>
 /// <param name="theEspAdd">ESP增加的值</param>
 void Asm_Ret_Free(int16_t theEspAdd);
+/// <summary>
+/// 生成修改Esp并Jmp到指定地址的EIP地址
+/// </summary>
+/// <param name="theEsp">修改的ESP</param>
+/// <param name="theJmpAddress">Jmp到地址</param>
+/// <returns>EIP地址(0则失败)</returns>
+int32_t Asm_Mov_Esp_And_Jmp(int32_t theEsp, int32_t theJmpAddress);
+/// <summary>
+/// 释放生成的修改Esp并Jmp到指定地址的EIP地址
+/// </summary>
+/// <param name="theEsp">修改的ESP</param>
+/// <param name="theJmpAddress">Jmp到地址</param>
+void Asm_Mov_Esp_And_Jmp_Free(int32_t theEsp, int32_t theJmpAddress);
 
 /// <summary>
 /// 开始Hook(Hook Asm版本)

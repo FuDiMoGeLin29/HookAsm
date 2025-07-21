@@ -9,6 +9,16 @@
 //#pragma comment(lib, "capstone/capstone.lib")
 #include "HookAsm.h"
 
+struct EspAndJmpAddress
+{
+	int32_t mEsp;
+	int32_t mJmpAddress;
+
+	bool operator<(const EspAndJmpAddress& other) const {
+		return std::tie(mEsp, mJmpAddress) < std::tie(other.mEsp, other.mJmpAddress);
+	}
+};
+
 constexpr size_t HOOK_CALL_OFFSET = 23;
 
 std::map<LPVOID, const BYTE*> hookOriginalCode;
@@ -21,6 +31,7 @@ std::map<LPVOID, LPVOID> hookFuncAddress;
 std::map<LPVOID, LPVOID> hookFuncAllocAddress;
 
 std::map<int16_t, LPVOID> RetAddress;
+std::map<EspAndJmpAddress, LPVOID> MovEspAndJmpAddressAddress;
 
 constexpr BYTE HookCallByteArr[] = { 0x68,0x00,0x00,0x00,0x00,0xE8,0x00,0x00,0x00,0x00,0x60,0x9C,0x83,0x44,0x24,0x10,0x08,0x83,0x44,0x24,0x24,0x17,0x54,0xE8,0x00,0x00,0x00,0x00,0x9D,0x61,0xC2,0x04,0x00,0x8B,0x64,0x24,0xE4 };
 constexpr BYTE HookJmp[] = { 0xE9,0,0,0,0 };
@@ -39,6 +50,8 @@ constexpr BYTE NOP[9][9] =
 
 constexpr BYTE RetEspAddByteArr[] = { 0xC2,0,0 };
 constexpr BYTE RetByteArr[] = { 0xC3 };
+
+constexpr BYTE MovEspByteArr[] = { 0xBC,0x00,0x00,0x00,0x00 };
 
 HANDLE heapHandle = 0;
 HANDLE funcHeapHandle = 0;
@@ -608,7 +621,46 @@ void Asm_Ret_Free(int16_t theEspAdd)
 	}
 	HeapFree(eipFuncHeapHandle, 0, RetAddress[theEspAdd]);
 	RetAddress.erase(theEspAdd);
-	if (RetAddress.size() == 0)
+	if (RetAddress.size() == 0 && MovEspAndJmpAddressAddress.size() == 0)
+	{
+		HeapDestroy(eipFuncHeapHandle);
+		eipFuncHeapHandle = NULL;
+	}
+}
+
+int32_t Asm_Mov_Esp_And_Jmp(int32_t theEsp, int32_t theJmpAddress)
+{
+	if (eipFuncHeapHandle == NULL)
+	{
+		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (eipFuncHeapHandle == NULL)
+		{
+			return 0;
+		}
+	}
+	if (MovEspAndJmpAddressAddress.count({ theEsp, theJmpAddress }) == 0)
+	{
+		LPVOID allocAddress = HeapAlloc(eipFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(MovEspByteArr) + sizeof(HookJmp));
+		memcpy(allocAddress, MovEspByteArr, sizeof(MovEspByteArr));
+		memcpy((LPVOID)((int32_t)allocAddress + 1), &theEsp, sizeof(theEsp));
+		memcpy((LPVOID)((int32_t)allocAddress + sizeof(MovEspByteArr)), HookJmp, sizeof(HookJmp));
+		int32_t aJmpTo = theJmpAddress - ((int32_t)allocAddress + sizeof(MovEspByteArr)) - 5;
+		memcpy((LPVOID)((int32_t)allocAddress + sizeof(MovEspByteArr) + 1), &aJmpTo, sizeof(aJmpTo));
+		MovEspAndJmpAddressAddress[{theEsp, theJmpAddress}] = allocAddress;
+		return (int32_t)allocAddress;
+	}
+	else
+	{
+		return (int32_t)MovEspAndJmpAddressAddress[{theEsp, theJmpAddress}];
+	}
+}
+
+void Asm_Mov_Esp_And_Jmp_Free(int32_t theEsp, int32_t theJmpAddress)
+{
+	ZeroMemory((MovEspAndJmpAddressAddress[{theEsp, theJmpAddress}]), sizeof(MovEspByteArr) + sizeof(HookJmp));
+	HeapFree(eipFuncHeapHandle, 0, MovEspAndJmpAddressAddress[{theEsp, theJmpAddress}]);
+	MovEspAndJmpAddressAddress.erase({ theEsp, theJmpAddress });
+	if (RetAddress.size() == 0 && MovEspAndJmpAddressAddress.size() == 0)
 	{
 		HeapDestroy(eipFuncHeapHandle);
 		eipFuncHeapHandle = NULL;

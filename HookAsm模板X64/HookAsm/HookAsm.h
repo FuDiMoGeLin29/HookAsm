@@ -257,6 +257,19 @@ int64_t Asm_Ret();
 /// </summary>
 /// <param name="theRspAdd">RSP增加的值</param>
 void Asm_Ret_Free(int16_t theRspAdd);
+/// <summary>
+/// 生成修改Rsp并Jmp到指定地址的RIP地址
+/// </summary>
+/// <param name="theRsp">修改的RSP</param>
+/// <param name="theJmpAddress">Jmp到地址</param>
+/// <returns>RIP地址(0则失败)</returns>
+int64_t Asm_Mov_Rsp_And_Jmp(int64_t theRsp, int64_t theJmpAddress);
+/// <summary>
+/// 释放生成的修改Rsp并Jmp到指定地址的RIP地址
+/// </summary>
+/// <param name="theRsp">修改的RSP</param>
+/// <param name="theJmpAddress">Jmp到地址</param>
+void Asm_Mov_Rsp_And_Jmp_Free(int64_t theRsp, int64_t theJmpAddress);
 
 //保存全部浮点数寄存器
 FXSAVE64_Area Asm_Fxsave();

@@ -14,6 +14,16 @@
 #include <string>
 #include <string.h>
 
+struct RspAndJmpAddress
+{
+	int64_t mRsp;
+	int64_t mJmpAddress;
+
+	bool operator<(const RspAndJmpAddress& other) const {
+		return std::tie(mRsp, mJmpAddress) < std::tie(other.mRsp, other.mJmpAddress);
+	}
+};
+
 std::map<LPVOID, const BYTE*> hookOriginalCode;
 std::map<LPVOID, size_t> hookOriginalCodeSize;
 std::map<LPVOID, LPVOID> hookAllocAddress;
@@ -27,6 +37,7 @@ std::map<LPVOID, LPVOID> hookFuncAddress;
 std::map<LPVOID, LPVOID> hookFuncAllocAddress;
 
 std::map<int16_t, LPVOID> RetAddress;
+std::map<RspAndJmpAddress, LPVOID> MovRspAndJmpAddressAddress;
 
 constexpr BYTE HookCallByteArr[] = { 0x48,0x8D,0x64,0x24,0xF8,0xC7,0x04,0x24,0x00,0x00,0x00,0x00,0xC7,0x44,0x24,0x04,0x00,0x00,0x00,0x00,0xE8,0x00,0x00,0x00,0x00,0x9C,0x50,0x51,0x52,0x53,0x48,0x8D,0x44,0x24,0x38,0x50,0x55,0x56,0x57,0x41,0x50,0x41,0x51,0x41,0x52,0x41,0x53,0x41,0x54,0x41,0x55,0x41,0x56,0x41,0x57,0x83,0x84,0x24,0x88,0x00,0x00,0x00,0x5E,0x48,0x83,0xEC,0x08,0x48,0x8D,0x4C,0x24,0x08,0x48,0xB8,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xD0,0x48,0x83,0xC4,0x08,0x41,0x5F,0x41,0x5E,0x41,0x5D,0x41,0x5C,0x41,0x5B,0x41,0x5A,0x41,0x59,0x41,0x58,0x5F,0x5E,0x5D,0x48,0x83,0xC4,0x08,0x5B,0x5A,0x59,0x58,0x9D,0xC2,0x08,0x00,0x48,0x8B,0x64,0x24,0xC0 };
 constexpr BYTE HookJmp[] = { 0xE9,0,0,0,0 };
@@ -46,6 +57,8 @@ constexpr BYTE HookJmpLong[] = { 0xFF,0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x
 
 constexpr BYTE RetRspAddByteArr[] = { 0xC2,0,0 };
 constexpr BYTE RetByteArr[] = { 0xC3 };
+
+constexpr BYTE MovRspByteArr[] = { 0x48,0xBC,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 
 HANDLE ripFuncHeapHandle = 0;
 
@@ -721,7 +734,45 @@ void Asm_Ret_Free(int16_t theRspAdd)
 	}
 	HeapFree(ripFuncHeapHandle, 0, RetAddress[theRspAdd]);
 	RetAddress.erase(theRspAdd);
-	if (RetAddress.size() == 0)
+	if (RetAddress.size() == 0 && MovRspAndJmpAddressAddress.size() == 0)
+	{
+		HeapDestroy(ripFuncHeapHandle);
+		ripFuncHeapHandle = NULL;
+	}
+}
+
+int64_t Asm_Mov_Rsp_And_Jmp(int64_t theRsp, int64_t theJmpAddress)
+{
+	if (ripFuncHeapHandle == NULL)
+	{
+		ripFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (ripFuncHeapHandle == NULL)
+		{
+			return 0;
+		}
+	}
+	if (MovRspAndJmpAddressAddress.count({ theRsp, theJmpAddress }) == 0)
+	{
+		LPVOID allocAddress = HeapAlloc(ripFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(MovRspByteArr) + sizeof(HookJmpLong));
+		memcpy(allocAddress, MovRspByteArr, sizeof(MovRspByteArr));
+		memcpy((LPVOID)((int64_t)allocAddress + 2), &theRsp, sizeof(theRsp));
+		memcpy((LPVOID)((int64_t)allocAddress + sizeof(MovRspByteArr)), HookJmpLong, sizeof(HookJmpLong));
+		memcpy((LPVOID)((int64_t)allocAddress + sizeof(MovRspByteArr) + 6), &theJmpAddress, sizeof(theJmpAddress));
+		MovRspAndJmpAddressAddress[{theRsp, theJmpAddress}] = allocAddress;
+		return (int64_t)allocAddress;
+	}
+	else
+	{
+		return (int64_t)MovRspAndJmpAddressAddress[{theRsp, theJmpAddress}];
+	}
+}
+
+void Asm_Mov_Rsp_And_Jmp_Free(int64_t theRsp, int64_t theJmpAddress)
+{
+	ZeroMemory((MovRspAndJmpAddressAddress[{theRsp, theJmpAddress}]), sizeof(MovRspByteArr) + sizeof(HookJmpLong));
+	HeapFree(ripFuncHeapHandle, 0, MovRspAndJmpAddressAddress[{theRsp, theJmpAddress}]);
+	MovRspAndJmpAddressAddress.erase({ theRsp, theJmpAddress });
+	if (RetAddress.size() == 0 && MovRspAndJmpAddressAddress.size() == 0)
 	{
 		HeapDestroy(ripFuncHeapHandle);
 		ripFuncHeapHandle = NULL;
