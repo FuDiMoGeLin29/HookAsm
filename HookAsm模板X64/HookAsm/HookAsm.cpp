@@ -26,6 +26,8 @@ std::map<LPVOID, size_t> hookFuncOriginalCodeSize;
 std::map<LPVOID, LPVOID> hookFuncAddress;
 std::map<LPVOID, LPVOID> hookFuncAllocAddress;
 
+std::map<int16_t, LPVOID> RetAddress;
+
 constexpr BYTE HookCallByteArr[] = { 0x48,0x8D,0x64,0x24,0xF8,0xC7,0x04,0x24,0x00,0x00,0x00,0x00,0xC7,0x44,0x24,0x04,0x00,0x00,0x00,0x00,0xE8,0x00,0x00,0x00,0x00,0x9C,0x50,0x51,0x52,0x53,0x48,0x8D,0x44,0x24,0x38,0x50,0x55,0x56,0x57,0x41,0x50,0x41,0x51,0x41,0x52,0x41,0x53,0x41,0x54,0x41,0x55,0x41,0x56,0x41,0x57,0x83,0x84,0x24,0x88,0x00,0x00,0x00,0x5E,0x48,0x83,0xEC,0x08,0x48,0x8D,0x4C,0x24,0x08,0x48,0xB8,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xD0,0x48,0x83,0xC4,0x08,0x41,0x5F,0x41,0x5E,0x41,0x5D,0x41,0x5C,0x41,0x5B,0x41,0x5A,0x41,0x59,0x41,0x58,0x5F,0x5E,0x5D,0x48,0x83,0xC4,0x08,0x5B,0x5A,0x59,0x58,0x9D,0xC2,0x08,0x00,0x48,0x8B,0x64,0x24,0xC0 };
 constexpr BYTE HookJmp[] = { 0xE9,0,0,0,0 };
 constexpr BYTE NOP[9][9] =
@@ -41,6 +43,11 @@ constexpr BYTE NOP[9][9] =
 	{0x66,0x0F,0x1F,0x84,0,0,0,0,0}
 };
 constexpr BYTE HookJmpLong[] = { 0xFF,0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
+
+constexpr BYTE RetEspAddByteArr[] = { 0xC2,0,0 };
+constexpr BYTE RetByteArr[] = { 0xC3 };
+
+HANDLE eipFuncHeapHandle = 0;
 
 long long htoi64(const char* _String)
 {
@@ -644,6 +651,68 @@ bool HookFunctionStop(LPVOID* oldFunc)
 	hookFuncAddress.erase(oldFunction);
 	hookFuncAllocAddress.erase(oldFunction);
 	return true;
+}
+
+
+int64_t Asm_Ret()
+{
+	if (eipFuncHeapHandle == 0)
+	{
+		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+	}
+	if (RetAddress.count(0) == 0)
+	{
+		LPVOID allocAddress = HeapAlloc(eipFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetByteArr));
+		memcpy(allocAddress, RetByteArr, sizeof(RetByteArr));
+		RetAddress[0] = allocAddress;
+		return (int64_t)allocAddress;
+	}
+	else
+	{
+		return (int64_t)RetAddress[0];
+	}
+}
+
+int64_t Asm_Ret(int16_t theEspAdd)
+{
+	if (theEspAdd == 0)
+	{
+		return Asm_Ret();
+	}
+	if (eipFuncHeapHandle == 0)
+	{
+		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+	}
+	if (RetAddress.count(theEspAdd) == 0)
+	{
+		LPVOID allocAddress = HeapAlloc(eipFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetEspAddByteArr));
+		memcpy(allocAddress, RetEspAddByteArr, sizeof(RetEspAddByteArr));
+		memcpy((LPVOID)((int64_t)allocAddress + 1), &theEspAdd, sizeof(theEspAdd));
+		RetAddress[theEspAdd] = allocAddress;
+		return (int64_t)allocAddress;
+	}
+	else
+	{
+		return (int64_t)RetAddress[theEspAdd];
+	}
+}
+
+void Asm_Ret_Free(int16_t theEspAdd)
+{
+	if (theEspAdd == 0)
+	{
+		ZeroMemory(RetAddress[0], sizeof(RetByteArr));
+	}
+	else
+	{
+		ZeroMemory(RetAddress[theEspAdd], sizeof(RetEspAddByteArr));
+	}
+	HeapFree(eipFuncHeapHandle, 0, RetAddress[theEspAdd]);
+	if (RetAddress.size() == 0)
+	{
+		HeapDestroy(eipFuncHeapHandle);
+		eipFuncHeapHandle = 0;
+	}
 }
 
 #pragma pack(push, 1)        // 取消结构体对齐填充

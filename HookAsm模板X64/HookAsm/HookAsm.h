@@ -230,6 +230,23 @@ extern "C"
 
 #endif
 
+/// <summary>
+/// 生成ret XXXX指令的EIP地址
+/// </summary>
+/// <param name="theEspAdd">ESP增加的值(填写0则会内部调用不含参数的Asm_Ret重载函数)</param>
+/// <returns>EIP地址</returns>
+int64_t Asm_Ret(int16_t theEspAdd);
+/// <summary>
+/// 生成Ret指令的EIP地址
+/// </summary>
+/// <returns>EIP地址</returns>
+int64_t Asm_Ret();
+/// <summary>
+/// 释放生成的ret/ret XXXX指令的EIP地址
+/// </summary>
+/// <param name="theEspAdd">ESP增加的值</param>
+void Asm_Ret_Free(int16_t theEspAdd);
+
 //保存全部浮点数寄存器
 FXSAVE64_Area Asm_Fxsave();
 //恢复全部浮点数寄存器

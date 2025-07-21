@@ -9,6 +9,7 @@
 //#pragma comment(lib, "capstone/capstone.lib")
 #include "HookAsm.h"
 
+constexpr size_t HOOK_CALL_OFFSET = 23;
 
 std::map<LPVOID, const BYTE*> hookOriginalCode;
 std::map<LPVOID, size_t> hookOriginalCodeSize;
@@ -18,6 +19,8 @@ std::map<LPVOID, const BYTE*> hookFuncOriginalCode;
 std::map<LPVOID, size_t> hookFuncOriginalCodeSize;
 std::map<LPVOID, LPVOID> hookFuncAddress;
 std::map<LPVOID, LPVOID> hookFuncAllocAddress;
+
+std::map<int16_t, LPVOID> RetAddress;
 
 constexpr BYTE HookCallByteArr[] = { 0x68,0x00,0x00,0x00,0x00,0xE8,0x00,0x00,0x00,0x00,0x60,0x9C,0x83,0x44,0x24,0x10,0x08,0x83,0x44,0x24,0x24,0x17,0x54,0xE8,0x00,0x00,0x00,0x00,0x9D,0x61,0xC2,0x04,0x00,0x8B,0x64,0x24,0xE4 };
 constexpr BYTE HookJmp[] = { 0xE9,0,0,0,0 };
@@ -34,8 +37,12 @@ constexpr BYTE NOP[9][9] =
 	{0x66,0x0F,0x1F,0x84,0,0,0,0,0}
 };
 
+constexpr BYTE RetEspAddByteArr[] = { 0xC2,0,0 };
+constexpr BYTE RetByteArr[] = { 0xC3 };
+
 HANDLE heapHandle = 0;
 HANDLE funcHeapHandle = 0;
+HANDLE eipFuncHeapHandle = 0;
 
 int htoi(const char* _String)
 {
@@ -197,9 +204,9 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 	{
 	case OriginalCodeLocation_Behind:
 	{
-		hookCall = (int)callBack - (int)allocAddress - 23 - 5;
+		hookCall = (int)callBack - (int)allocAddress - HOOK_CALL_OFFSET - 5;
 		memcpy(asmByteArr, HookCallByteArr, sizeof(HookCallByteArr));
-		memcpy(asmByteArr + 24, &hookCall, sizeof(hookCall));
+		memcpy(asmByteArr + (HOOK_CALL_OFFSET + 1), &hookCall, sizeof(hookCall));
 		memcpy(asmByteArr + 1, &hookAddress, sizeof(hookAddress));
 
 		//asmjit::CodeBuffer codeBuffer = HookAssemble(disAsmStrList[i].asmStr.c_str(), ((int)allocAddress + sizeof(HookCallByteArr) + asmLen));
@@ -302,16 +309,16 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 		memcpy(asmByteArr, codeBuffer.data(), codeBuffer.size());
 		asmLen += codeBuffer.size();
 
-		hookCall = (int)callBack - (int)allocAddress - asmLen - 23 - 5;
+		hookCall = (int)callBack - (int)allocAddress - asmLen - HOOK_CALL_OFFSET - 5;
 		memcpy(asmByteArr + asmLen, HookCallByteArr, sizeof(HookCallByteArr));
-		memcpy(asmByteArr + asmLen + 24, &hookCall, sizeof(hookCall));
+		memcpy(asmByteArr + asmLen + (HOOK_CALL_OFFSET + 1), &hookCall, sizeof(hookCall));
 		memcpy(asmByteArr + asmLen + 1, &hookAddress, sizeof(hookAddress));
 		break;
 	}
 	case OriginalCodeLocation_Without:
-		hookCall = (int)callBack - (int)allocAddress - 23 - 5;
+		hookCall = (int)callBack - (int)allocAddress - HOOK_CALL_OFFSET - 5;
 		memcpy(asmByteArr, HookCallByteArr, sizeof(HookCallByteArr));
-		memcpy(asmByteArr + 24, &hookCall, sizeof(hookCall));
+		memcpy(asmByteArr + (HOOK_CALL_OFFSET + 1), &hookCall, sizeof(hookCall));
 		memcpy(asmByteArr + 1, &hookAddress, sizeof(hookAddress));
 		break;
 	default:
@@ -516,6 +523,67 @@ Eflags Asm_Test(int num1, int num2)
 		pop result;
 	}
 	return result;
+}
+
+int32_t Asm_Ret()
+{
+	if (eipFuncHeapHandle == 0)
+	{
+		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+	}
+	if (RetAddress.count(0) == 0)
+	{
+		LPVOID allocAddress = HeapAlloc(eipFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetByteArr));
+		memcpy(allocAddress, RetByteArr, sizeof(RetByteArr));
+		RetAddress[0] = allocAddress;
+		return (int32_t)allocAddress;
+	}
+	else
+	{
+		return (int32_t)RetAddress[0];
+	}
+}
+
+int32_t Asm_Ret(int16_t theEspAdd)
+{
+	if (theEspAdd == 0)
+	{
+		return Asm_Ret();
+	}
+	if (eipFuncHeapHandle == 0)
+	{
+		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+	}
+	if (RetAddress.count(theEspAdd) == 0)
+	{
+		LPVOID allocAddress = HeapAlloc(eipFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetEspAddByteArr));
+		memcpy(allocAddress, RetEspAddByteArr, sizeof(RetEspAddByteArr));
+		memcpy((LPVOID)((int32_t)allocAddress + 1), &theEspAdd, sizeof(theEspAdd));
+		RetAddress[theEspAdd] = allocAddress;
+		return (int32_t)allocAddress;
+	}
+	else
+	{
+		return (int32_t)RetAddress[theEspAdd];
+	}
+}
+
+void Asm_Ret_Free(int16_t theEspAdd)
+{
+	if (theEspAdd == 0)
+	{
+		ZeroMemory(RetAddress[0], sizeof(RetByteArr));
+	}
+	else
+	{
+		ZeroMemory(RetAddress[theEspAdd], sizeof(RetEspAddByteArr));
+	}
+	HeapFree(eipFuncHeapHandle, 0, RetAddress[theEspAdd]);
+	if (RetAddress.size() == 0)
+	{
+		HeapDestroy(eipFuncHeapHandle);
+		eipFuncHeapHandle = 0;
+	}
 }
 
 #pragma pack(push, 1)        // 取消结构体对齐填充

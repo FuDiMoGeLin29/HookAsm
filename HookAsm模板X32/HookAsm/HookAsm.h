@@ -158,6 +158,22 @@ Eflags Asm_Test(int num1, int num2);
 FXSAVE_Area Asm_Fxsave();
 //恢复全部浮点数寄存器
 void Asm_Fxrstor(const FXSAVE_Area& theFxsaveArea);
+/// <summary>
+/// 生成ret XXXX指令的EIP地址
+/// </summary>
+/// <param name="theEspAdd">ESP增加的值(填写0则会内部调用不含参数的Asm_Ret重载函数)</param>
+/// <returns>EIP地址</returns>
+int32_t Asm_Ret(int16_t theEspAdd);
+/// <summary>
+/// 生成Ret指令的EIP地址
+/// </summary>
+/// <returns>EIP地址</returns>
+int32_t Asm_Ret();
+/// <summary>
+/// 释放生成的ret/ret XXXX指令的EIP地址
+/// </summary>
+/// <param name="theEspAdd">ESP增加的值</param>
+void Asm_Ret_Free(int16_t theEspAdd);
 
 /// <summary>
 /// 开始Hook(Hook Asm版本)
