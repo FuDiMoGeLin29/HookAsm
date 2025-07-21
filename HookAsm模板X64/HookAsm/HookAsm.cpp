@@ -75,11 +75,11 @@ long long htoi64(const char* _String)
 	{
 		if (_Str[len - i - 1] >= 'a' && _Str[len - i - 1] <= 'f')
 		{
-			result += (10 + _Str[len - i - 1] - 'a') * (1 << (4 * i));
+			result += ((long long)(10 + _Str[len - i - 1] - 'a')) * ((long long)1 << (4 * i));
 		}
 		else if (_Str[len - i - 1] >= '0' && _Str[len - i - 1] <= '9')
 		{
-			result += (_Str[len - i - 1] - '0') * (1 << (4 * i));
+			result += ((long long)(_Str[len - i - 1] - '0')) * ((long long)1 << (4 * i));
 		}
 		else
 		{
