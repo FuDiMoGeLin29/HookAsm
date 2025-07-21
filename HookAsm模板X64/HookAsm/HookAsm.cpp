@@ -44,10 +44,10 @@ constexpr BYTE NOP[9][9] =
 };
 constexpr BYTE HookJmpLong[] = { 0xFF,0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 
-constexpr BYTE RetEspAddByteArr[] = { 0xC2,0,0 };
+constexpr BYTE RetRspAddByteArr[] = { 0xC2,0,0 };
 constexpr BYTE RetByteArr[] = { 0xC3 };
 
-HANDLE eipFuncHeapHandle = 0;
+HANDLE ripFuncHeapHandle = 0;
 
 long long htoi64(const char* _String)
 {
@@ -656,13 +656,13 @@ bool HookFunctionStop(LPVOID* oldFunc)
 
 int64_t Asm_Ret()
 {
-	if (eipFuncHeapHandle == 0)
+	if (ripFuncHeapHandle == 0)
 	{
-		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		ripFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
 	}
 	if (RetAddress.count(0) == 0)
 	{
-		LPVOID allocAddress = HeapAlloc(eipFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetByteArr));
+		LPVOID allocAddress = HeapAlloc(ripFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetByteArr));
 		memcpy(allocAddress, RetByteArr, sizeof(RetByteArr));
 		RetAddress[0] = allocAddress;
 		return (int64_t)allocAddress;
@@ -673,45 +673,45 @@ int64_t Asm_Ret()
 	}
 }
 
-int64_t Asm_Ret(int16_t theEspAdd)
+int64_t Asm_Ret(int16_t theRspAdd)
 {
-	if (theEspAdd == 0)
+	if (theRspAdd == 0)
 	{
 		return Asm_Ret();
 	}
-	if (eipFuncHeapHandle == 0)
+	if (ripFuncHeapHandle == 0)
 	{
-		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		ripFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
 	}
-	if (RetAddress.count(theEspAdd) == 0)
+	if (RetAddress.count(theRspAdd) == 0)
 	{
-		LPVOID allocAddress = HeapAlloc(eipFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetEspAddByteArr));
-		memcpy(allocAddress, RetEspAddByteArr, sizeof(RetEspAddByteArr));
-		memcpy((LPVOID)((int64_t)allocAddress + 1), &theEspAdd, sizeof(theEspAdd));
-		RetAddress[theEspAdd] = allocAddress;
+		LPVOID allocAddress = HeapAlloc(ripFuncHeapHandle, HEAP_ZERO_MEMORY, sizeof(RetRspAddByteArr));
+		memcpy(allocAddress, RetRspAddByteArr, sizeof(RetRspAddByteArr));
+		memcpy((LPVOID)((int64_t)allocAddress + 1), &theRspAdd, sizeof(theRspAdd));
+		RetAddress[theRspAdd] = allocAddress;
 		return (int64_t)allocAddress;
 	}
 	else
 	{
-		return (int64_t)RetAddress[theEspAdd];
+		return (int64_t)RetAddress[theRspAdd];
 	}
 }
 
-void Asm_Ret_Free(int16_t theEspAdd)
+void Asm_Ret_Free(int16_t theRspAdd)
 {
-	if (theEspAdd == 0)
+	if (theRspAdd == 0)
 	{
 		ZeroMemory(RetAddress[0], sizeof(RetByteArr));
 	}
 	else
 	{
-		ZeroMemory(RetAddress[theEspAdd], sizeof(RetEspAddByteArr));
+		ZeroMemory(RetAddress[theRspAdd], sizeof(RetRspAddByteArr));
 	}
-	HeapFree(eipFuncHeapHandle, 0, RetAddress[theEspAdd]);
+	HeapFree(ripFuncHeapHandle, 0, RetAddress[theRspAdd]);
 	if (RetAddress.size() == 0)
 	{
-		HeapDestroy(eipFuncHeapHandle);
-		eipFuncHeapHandle = 0;
+		HeapDestroy(ripFuncHeapHandle);
+		ripFuncHeapHandle = 0;
 	}
 }
 

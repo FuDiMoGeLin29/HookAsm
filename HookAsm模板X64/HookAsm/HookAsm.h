@@ -231,21 +231,21 @@ extern "C"
 #endif
 
 /// <summary>
-/// 生成ret XXXX指令的EIP地址
+/// 生成ret XXXX指令的RIP地址
 /// </summary>
-/// <param name="theEspAdd">ESP增加的值(填写0则会内部调用不含参数的Asm_Ret重载函数)</param>
-/// <returns>EIP地址</returns>
-int64_t Asm_Ret(int16_t theEspAdd);
+/// <param name="theRspAdd">RSP增加的值(填写0则会内部调用不含参数的Asm_Ret重载函数)</param>
+/// <returns>RIP地址</returns>
+int64_t Asm_Ret(int16_t theRspAdd);
 /// <summary>
-/// 生成Ret指令的EIP地址
+/// 生成Ret指令的RIP地址
 /// </summary>
-/// <returns>EIP地址</returns>
+/// <returns>RIP地址</returns>
 int64_t Asm_Ret();
 /// <summary>
-/// 释放生成的ret/ret XXXX指令的EIP地址
+/// 释放生成的ret/ret XXXX指令的RIP地址
 /// </summary>
-/// <param name="theEspAdd">ESP增加的值</param>
-void Asm_Ret_Free(int16_t theEspAdd);
+/// <param name="theRspAdd">RSP增加的值</param>
+void Asm_Ret_Free(int16_t theRspAdd);
 
 //保存全部浮点数寄存器
 FXSAVE64_Area Asm_Fxsave();
