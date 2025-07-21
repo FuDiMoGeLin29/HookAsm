@@ -708,6 +708,7 @@ void Asm_Ret_Free(int16_t theRspAdd)
 		ZeroMemory(RetAddress[theRspAdd], sizeof(RetRspAddByteArr));
 	}
 	HeapFree(ripFuncHeapHandle, 0, RetAddress[theRspAdd]);
+	RetAddress.erase(theRspAdd);
 	if (RetAddress.size() == 0)
 	{
 		HeapDestroy(ripFuncHeapHandle);

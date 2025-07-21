@@ -579,6 +579,7 @@ void Asm_Ret_Free(int16_t theEspAdd)
 		ZeroMemory(RetAddress[theEspAdd], sizeof(RetEspAddByteArr));
 	}
 	HeapFree(eipFuncHeapHandle, 0, RetAddress[theEspAdd]);
+	RetAddress.erase(theEspAdd);
 	if (RetAddress.size() == 0)
 	{
 		HeapDestroy(eipFuncHeapHandle);
