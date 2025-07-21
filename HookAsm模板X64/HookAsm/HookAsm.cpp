@@ -211,7 +211,7 @@ void FillNop(BYTE* resultData, size_t nopSize)
 	}
 }
 
-bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation, LPCVOID jmpBackAddress)
+HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation, LPCVOID jmpBackAddress)
 {
 	//if (hookAllocAddress.count(hookAddress) > 0)
 	//{
@@ -220,7 +220,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 	DisAsmStr disAsmStr = HookDisAsm(hookAddress);
 	if (disAsmStr.asmByteSize == 0)
 	{
-		return false;
+		return HookError::ErrorDisAsmFailed;
 	}
 	for (size_t i = 1; i < DISASM_SIZE; i++)
 	{
@@ -229,7 +229,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 		{
 			if (hookOriginalCodeSize[findAddress] > i)
 			{
-				return false;
+				return HookError::ErrorHasHookedNear;
 			}
 		}
 	}
@@ -238,7 +238,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 		LPVOID findAddress = (LPVOID)((long long)hookAddress + i);
 		if (hookAllocAddress.count(findAddress) > 0)
 		{
-			return false;
+			return i == 0 ? HookError::ErrorHasHooked : HookError::ErrorHasHookedNear;
 		}
 	}
 	BYTE* defaultByteArr = new BYTE[disAsmStr.asmByteSize];
@@ -290,7 +290,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 				MessageBoxA(NULL, e.what(), "Error!", MB_OK | MB_ICONERROR);
 				delete[] defaultByteArr;
 				delete[] hookByteArr;
-				return false;
+				return HookError::ErrorMemoryAllocFailed;
 			}
 			};
 		if (i == codeHeaps.size())
@@ -358,7 +358,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 			}
 			delete[] defaultByteArr;
 			delete[] hookByteArr;
-			return false;
+			return HookError::ErrorAsmFailed;
 		}
 
 		// Now you can print the code, which is stored in the first section (.text).
@@ -402,7 +402,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 			}
 			delete[] defaultByteArr;
 			delete[] hookByteArr;
-			return false;
+			return HookError::ErrorAsmFailed;
 		}
 
 		// Now you can print the code, which is stored in the first section (.text).
@@ -443,7 +443,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 		}
 		delete[] defaultByteArr;
 		delete[] hookByteArr;
-		return false;
+		return HookError::ErrorBadParameter;
 	}
 	int hookJmpBack;
 	if (jmpBackAddress != (LPCVOID)-1)
@@ -469,7 +469,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 
 	WriteProcessMemory(GetCurrentProcess(), hookAddress, hookByteArr, disAsmStr.asmByteSize, 0);
 	delete[] hookByteArr;
-	return true;
+	return HookError::ErrorOk;
 }
 
 bool HookStop(LPVOID hookAddress)
@@ -502,21 +502,25 @@ bool HookStop(LPVOID hookAddress)
 	return true;
 }
 
-bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
+HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 {
 	for (std::map<LPVOID, LPVOID>::reverse_iterator iter = hookFuncAddress.rbegin(); iter != hookFuncAddress.rend(); iter++)
 	{
 		if (iter->second == *oldFunc)
 		{
-			return false;
+			return HookError::ErrorHasHooked;
 		}
 	}
 	if (hookFuncAddress.count(*oldFunc) > 0)
 	{
-		return false;
+		return HookError::ErrorHasHooked;
 	}
 	LPVOID oldFuncAddress = *oldFunc;
 	DisAsmStr disAsmStr = HookDisAsm(*oldFunc);
+	if (disAsmStr.asmByteSize == 0)
+	{
+		return HookError::ErrorDisAsmFailed;
+	}
 	BYTE* defaultByteArr = new BYTE[disAsmStr.asmByteSize];
 	memcpy(defaultByteArr, *oldFunc, disAsmStr.asmByteSize);
 	BYTE hookByteArr[DISASM_SIZE];
@@ -542,7 +546,7 @@ bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 			{
 				MessageBoxA(NULL, e.what(), "Error!", MB_OK | MB_ICONERROR);
 				delete[] defaultByteArr;
-				return false;
+				return HookError::ErrorMemoryAllocFailed;
 			}
 			};
 		if (i == codeHeaps.size())
@@ -595,7 +599,7 @@ bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 			codeHeaps.erase(codeHeaps.begin() + codeHeapPos);
 		}
 		delete[] defaultByteArr;
-		return false;
+		return HookError::ErrorAsmFailed;
 	}
 
 	// Now you can print the code, which is stored in the first section (.text).
@@ -619,7 +623,7 @@ bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 	hookFuncOriginalCodeSize[*oldFunc] = disAsmStr.asmByteSize;
 	hookFuncAddress[*oldFunc] = oldFuncAddress;
 	hookFuncAllocAddress[*oldFunc] = allocAddress;
-	return true;
+	return HookError::ErrorOk;
 }
 
 bool HookFunctionStop(LPVOID* oldFunc)
@@ -656,9 +660,13 @@ bool HookFunctionStop(LPVOID* oldFunc)
 
 int64_t Asm_Ret()
 {
-	if (ripFuncHeapHandle == 0)
+	if (ripFuncHeapHandle == NULL)
 	{
 		ripFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (ripFuncHeapHandle == NULL)
+		{
+			return 0;
+		}
 	}
 	if (RetAddress.count(0) == 0)
 	{
@@ -679,9 +687,13 @@ int64_t Asm_Ret(int16_t theRspAdd)
 	{
 		return Asm_Ret();
 	}
-	if (ripFuncHeapHandle == 0)
+	if (ripFuncHeapHandle == NULL)
 	{
 		ripFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (ripFuncHeapHandle == NULL)
+		{
+			return 0;
+		}
 	}
 	if (RetAddress.count(theRspAdd) == 0)
 	{
@@ -712,7 +724,7 @@ void Asm_Ret_Free(int16_t theRspAdd)
 	if (RetAddress.size() == 0)
 	{
 		HeapDestroy(ripFuncHeapHandle);
-		ripFuncHeapHandle = 0;
+		ripFuncHeapHandle = NULL;
 	}
 }
 

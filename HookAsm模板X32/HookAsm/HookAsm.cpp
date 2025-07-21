@@ -157,7 +157,7 @@ void FillNop(BYTE* resultData, size_t nopSize)
 	}
 }
 
-bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation, LPCVOID jmpBackAddress)
+HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation, LPCVOID jmpBackAddress)
 {
 	/*if (hookAllocAddress.count(hookAddress) > 0)
 	{
@@ -166,7 +166,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 	DisAsmStr disAsmStr = HookDisAsm(hookAddress);
 	if (disAsmStr.asmByteSize == 0)
 	{
-		return false;
+		return HookError::ErrorDisAsmFailed;
 	}
 	for (size_t i = 1; i < DISASM_SIZE; i++)
 	{
@@ -175,7 +175,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 		{
 			if (hookOriginalCodeSize[findAddress] > i)
 			{
-				return false;
+				return HookError::ErrorHasHookedNear;
 			}
 		}
 	}
@@ -184,17 +184,25 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 		LPVOID findAddress = (LPVOID)((int)hookAddress + i);
 		if (hookAllocAddress.count(findAddress) > 0)
 		{
-			return false;
+			return i == 0 ? HookError::ErrorHasHooked : HookError::ErrorHasHookedNear;
 		}
 	}
 	BYTE* defaultByteArr = new BYTE[disAsmStr.asmByteSize];
 	BYTE* hookByteArr = new BYTE[disAsmStr.asmByteSize];
-	if (heapHandle == 0)
+	if (heapHandle == NULL)
 	{
 		heapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (heapHandle == NULL)
+		{
+			return HookError::ErrorMemoryAllocFailed;
+		}
 	}
 	//LPVOID allocAddress = VirtualAlloc(0, sizeof(HookCallByteArr) + DISASM_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READ);
 	LPVOID allocAddress = HeapAlloc(heapHandle, HEAP_ZERO_MEMORY, sizeof(HookCallByteArr) + DISASM_SIZE);
+	if (allocAddress == NULL)
+	{
+		return HookError::ErrorMemoryAllocFailed;
+	}
 	//XEDPARSE asmByte;
 	//asmByte.x64 = false;
 	int asmLen = 0;
@@ -233,11 +241,11 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 			if (hookAllocAddress.size() == 0)
 			{
 				HeapDestroy(heapHandle);
-				heapHandle = 0;
+				heapHandle = NULL;
 			}
 			delete[] defaultByteArr;
 			delete[] hookByteArr;
-			return false;
+			return HookError::ErrorAsmFailed;
 		}
 
 		// Now you can print the code, which is stored in the first section (.text).
@@ -292,11 +300,11 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 			if (hookAllocAddress.size() == 0)
 			{
 				HeapDestroy(heapHandle);
-				heapHandle = 0;
+				heapHandle = NULL;
 			}
 			delete[] defaultByteArr;
 			delete[] hookByteArr;
-			return false;
+			return HookError::ErrorAsmFailed;
 		}
 
 		// Now you can print the code, which is stored in the first section (.text).
@@ -328,11 +336,11 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 		if (hookAllocAddress.size() == 0)
 		{
 			HeapDestroy(heapHandle);
-			heapHandle = 0;
+			heapHandle = NULL;
 		}
 		delete[] defaultByteArr;
 		delete[] hookByteArr;
-		return false;
+		return HookError::ErrorBadParameter;
 	}
 	int hookJmpBack;
 	if (jmpBackAddress != (LPCVOID)-1)
@@ -369,7 +377,7 @@ bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation o
 
 	WriteProcessMemory(GetCurrentProcess(), hookAddress, hookByteArr, disAsmStr.asmByteSize, 0);
 	delete[] hookByteArr;
-	return true;
+	return HookError::ErrorOk;
 }
 
 bool HookStop(LPVOID hookAddress)
@@ -391,36 +399,48 @@ bool HookStop(LPVOID hookAddress)
 	if (hookAllocAddress.size() == 0)
 	{
 		HeapDestroy(heapHandle);
-		heapHandle = 0;
+		heapHandle = NULL;
 	}
 	delete[] oldCode;
 	return true;
 }
 
-bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
+HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 {
 	for (std::map<LPVOID, LPVOID>::reverse_iterator iter = hookFuncAddress.rbegin(); iter != hookFuncAddress.rend(); iter++)
 	{
 		if (iter->second == *oldFunc)
 		{
-			return false;
+			return HookError::ErrorHasHooked;
 		}
 	}
 	if (hookFuncAddress.count(*oldFunc) > 0)
 	{
-		return false;
+		return HookError::ErrorHasHooked;
 	}
 	LPVOID oldFuncAddress = *oldFunc;
 	DisAsmStr disAsmStr = HookDisAsm(*oldFunc);
+	if (disAsmStr.asmByteSize == 0)
+	{
+		return HookError::ErrorDisAsmFailed;
+	}
 	BYTE* defaultByteArr = new BYTE[disAsmStr.asmByteSize];
 	memcpy(defaultByteArr, *oldFunc, disAsmStr.asmByteSize);
 	BYTE hookByteArr[DISASM_SIZE];
 	BYTE asmByteArr[DISASM_SIZE];
-	if (funcHeapHandle == 0)
+	if (funcHeapHandle == NULL)
 	{
 		funcHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (funcHeapHandle == NULL)
+		{
+			return HookError::ErrorMemoryAllocFailed;
+		}
 	}
 	LPVOID allocAddress = HeapAlloc(funcHeapHandle, HEAP_ZERO_MEMORY, sizeof(HookJmp) + DISASM_SIZE);
+	if (allocAddress == NULL)
+	{
+		return HookError::ErrorMemoryAllocFailed;
+	}
 	asmjit::Environment env(asmjit::Arch::kX86);
 	asmjit::CodeHolder code;
 	code.init(env, (uint64_t)((int)allocAddress));
@@ -444,10 +464,10 @@ bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 		if (hookFuncAllocAddress.size() == 0)
 		{
 			HeapDestroy(funcHeapHandle);
-			funcHeapHandle = 0;
+			funcHeapHandle = NULL;
 		}
 		delete[] defaultByteArr;
-		return false;
+		return HookError::ErrorAsmFailed;
 	}
 
 	// Now you can print the code, which is stored in the first section (.text).
@@ -472,7 +492,7 @@ bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 	hookFuncOriginalCodeSize[*oldFunc] = disAsmStr.asmByteSize;
 	hookFuncAddress[*oldFunc] = oldFuncAddress;
 	hookFuncAllocAddress[*oldFunc] = allocAddress;
-	return true;
+	return HookError::ErrorOk;
 }
 
 bool HookFunctionStop(LPVOID* oldFunc)
@@ -494,7 +514,7 @@ bool HookFunctionStop(LPVOID* oldFunc)
 	if (hookFuncAddress.size() == 0)
 	{
 		HeapDestroy(funcHeapHandle);
-		funcHeapHandle = 0;
+		funcHeapHandle = NULL;
 	}
 	return true;
 }
@@ -527,9 +547,13 @@ Eflags Asm_Test(int num1, int num2)
 
 int32_t Asm_Ret()
 {
-	if (eipFuncHeapHandle == 0)
+	if (eipFuncHeapHandle == NULL)
 	{
 		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (eipFuncHeapHandle == NULL)
+		{
+			return 0;
+		}
 	}
 	if (RetAddress.count(0) == 0)
 	{
@@ -550,9 +574,13 @@ int32_t Asm_Ret(int16_t theEspAdd)
 	{
 		return Asm_Ret();
 	}
-	if (eipFuncHeapHandle == 0)
+	if (eipFuncHeapHandle == NULL)
 	{
 		eipFuncHeapHandle = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 1024, 0);
+		if (eipFuncHeapHandle == NULL)
+		{
+			return 0;
+		}
 	}
 	if (RetAddress.count(theEspAdd) == 0)
 	{
@@ -583,7 +611,7 @@ void Asm_Ret_Free(int16_t theEspAdd)
 	if (RetAddress.size() == 0)
 	{
 		HeapDestroy(eipFuncHeapHandle);
-		eipFuncHeapHandle = 0;
+		eipFuncHeapHandle = NULL;
 	}
 }
 

@@ -13,6 +13,17 @@
 #define NOINLINE
 #endif
 
+enum HookError : int
+{
+	ErrorOk,
+	ErrorDisAsmFailed,
+	ErrorAsmFailed,
+	ErrorMemoryAllocFailed,
+	ErrorHasHooked,
+	ErrorHasHookedNear,
+	ErrorBadParameter,
+};
+
 enum OriginalCodeLocation : int
 {
 	OriginalCodeLocation_Behind,
@@ -234,12 +245,12 @@ extern "C"
 /// 生成ret XXXX指令的RIP地址
 /// </summary>
 /// <param name="theRspAdd">RSP增加的值(填写0则会内部调用不含参数的Asm_Ret重载函数)</param>
-/// <returns>RIP地址</returns>
+/// <returns>RIP地址(0则失败)</returns>
 int64_t Asm_Ret(int16_t theRspAdd);
 /// <summary>
 /// 生成Ret指令的RIP地址
 /// </summary>
-/// <returns>RIP地址</returns>
+/// <returns>RIP地址(0则失败)</returns>
 int64_t Asm_Ret();
 /// <summary>
 /// 释放生成的ret/ret XXXX指令的RIP地址
@@ -262,8 +273,8 @@ static_assert(sizeof(FXSAVE64_Area) >= 512, "FXSAVE64_Area size error");
 /// <param name="callBack">Hook回调函数</param>
 /// <param name="originalCodeLocation">被Hook的原代码位置</param>
 /// <param name="jmpBackAddress">Hook回跳地址</param>
-/// <returns>是否成功</returns>
-bool HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation = OriginalCodeLocation_Behind, LPCVOID jmpBackAddress = (LPCVOID)-1);
+/// <returns>Hook结果</returns>
+HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation = OriginalCodeLocation_Behind, LPCVOID jmpBackAddress = (LPCVOID)-1);
 
 /// <summary>
 /// 停止Hook(Asm版本)
@@ -277,8 +288,8 @@ bool HookStop(LPVOID hookAddress);
 /// </summary>
 /// <param name="newFunc">新函数</param>
 /// <param name="oldFunc">[in,out]存储要Hook的旧函数，并返回调用后不会产生递归的函数指针</param>
-/// <returns>是否成功</returns>
-bool HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc);
+/// <returns>Hook结果</returns>
+HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc);
 
 /// <summary>
 /// 停止Hook(Hook函数版本)
