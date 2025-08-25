@@ -341,6 +341,7 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16
 		//hookCall = (long long)callBack - (long long)allocAddress - 0x20 - 5;
 		memcpy(asmByteArr, HookCallByteArr, sizeof(HookCallByteArr));
 		memcpy(asmByteArr + 0x42, &subRSPValue, sizeof(subRSPValue));
+		memcpy(asmByteArr + 0x47, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + 0x57, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + 0x4A, &callBack, sizeof(callBack));
 		uint32_t fromAddr = (uint32_t)hookAddress;
@@ -433,6 +434,7 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16
 
 		memcpy(asmByteArr + asmLen, HookCallByteArr, sizeof(HookCallByteArr));
 		memcpy(asmByteArr + asmLen + 0x42, &subRSPValue, sizeof(subRSPValue));
+		memcpy(asmByteArr + asmLen + 0x47, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + asmLen + 0x57, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + asmLen + 0x4A, &callBack, sizeof(callBack));
 		uint32_t fromAddr = (uint32_t)hookAddress;
@@ -445,6 +447,7 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16
 	{
 		memcpy(asmByteArr, HookCallByteArr, sizeof(HookCallByteArr));
 		memcpy(asmByteArr + 0x42, &subRSPValue, sizeof(subRSPValue));
+		memcpy(asmByteArr + 0x47, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + 0x57, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + 0x4A, &callBack, sizeof(callBack));
 		uint32_t fromAddr = (uint32_t)hookAddress;
