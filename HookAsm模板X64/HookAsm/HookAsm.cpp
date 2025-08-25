@@ -224,7 +224,7 @@ void FillNop(BYTE* resultData, size_t nopSize)
 	}
 }
 
-HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation, LPCVOID jmpBackAddress)
+HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16Bytes, OriginalCodeLocation originalCodeLocation, LPCVOID jmpBackAddress)
 {
 	//if (hookAllocAddress.count(hookAddress) > 0)
 	//{
@@ -333,12 +333,15 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocat
 	int asmLen = 0;
 	BYTE asmByteArr[DISASM_SIZE + sizeof(HookCallByteArr) + sizeof(HookJmp)];
 	//int hookCall = 0;
+	BYTE subRSPValue = isRSPAlign16Bytes ? 0x8 : 0x10;
 	switch (originalCodeLocation)
 	{
 	case OriginalCodeLocation_Behind:
 	{
 		//hookCall = (long long)callBack - (long long)allocAddress - 0x20 - 5;
 		memcpy(asmByteArr, HookCallByteArr, sizeof(HookCallByteArr));
+		memcpy(asmByteArr + 0x42, &subRSPValue, sizeof(subRSPValue));
+		memcpy(asmByteArr + 0x57, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + 0x4A, &callBack, sizeof(callBack));
 		uint32_t fromAddr = (uint32_t)hookAddress;
 		memcpy(asmByteArr + 8, &fromAddr, sizeof(fromAddr));
@@ -429,6 +432,8 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocat
 		asmLen += codeBuffer.size();
 
 		memcpy(asmByteArr + asmLen, HookCallByteArr, sizeof(HookCallByteArr));
+		memcpy(asmByteArr + asmLen + 0x42, &subRSPValue, sizeof(subRSPValue));
+		memcpy(asmByteArr + asmLen + 0x57, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + asmLen + 0x4A, &callBack, sizeof(callBack));
 		uint32_t fromAddr = (uint32_t)hookAddress;
 		memcpy(asmByteArr + asmLen + 8, &fromAddr, sizeof(fromAddr));
@@ -439,6 +444,8 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocat
 	case OriginalCodeLocation_Without:
 	{
 		memcpy(asmByteArr, HookCallByteArr, sizeof(HookCallByteArr));
+		memcpy(asmByteArr + 0x42, &subRSPValue, sizeof(subRSPValue));
+		memcpy(asmByteArr + 0x57, &subRSPValue, sizeof(subRSPValue));
 		memcpy(asmByteArr + 0x4A, &callBack, sizeof(callBack));
 		uint32_t fromAddr = (uint32_t)hookAddress;
 		memcpy(asmByteArr + 8, &fromAddr, sizeof(fromAddr));

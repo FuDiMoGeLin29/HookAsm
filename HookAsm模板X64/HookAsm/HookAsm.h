@@ -284,10 +284,11 @@ static_assert(sizeof(FXSAVE64_Area) >= 512, "FXSAVE64_Area size error");
 /// </summary>
 /// <param name="hookAddress">要Hook的地址</param>
 /// <param name="callBack">Hook回调函数</param>
+/// <param name="isRSPAlign16Bytes">Hook的位置RSP是否16字节对齐</param>
 /// <param name="originalCodeLocation">被Hook的原代码位置</param>
 /// <param name="jmpBackAddress">Hook回跳地址</param>
 /// <returns>Hook结果</returns>
-HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, OriginalCodeLocation originalCodeLocation = OriginalCodeLocation_Behind, LPCVOID jmpBackAddress = (LPCVOID)-1);
+HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16Bytes = true, OriginalCodeLocation originalCodeLocation = OriginalCodeLocation_Behind, LPCVOID jmpBackAddress = (LPCVOID)-1);
 
 /// <summary>
 /// 停止Hook(Asm版本)
