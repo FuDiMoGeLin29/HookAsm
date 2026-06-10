@@ -590,4 +590,9 @@
       <Filter>HookAsm\capstone</Filter>
     </Library>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="HookAsm\capstone\capstone.pdb">
+      <Filter>HookAsm\capstone</Filter>
+    </None>
+  </ItemGroup>
 </Project>

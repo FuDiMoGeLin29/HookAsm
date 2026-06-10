@@ -104,7 +104,7 @@ long long htoi64(const char* _String)
 	return result;
 }
 
-DisAsmStr HookDisAsm(LPVOID address)
+DisAsmStr HookDisAsm(LPVOID address, bool isUseLongJump)
 {
 	csh csHandle;
 	cs_insn* insn;
@@ -197,9 +197,19 @@ DisAsmStr HookDisAsm(LPVOID address)
 			}*/
 			resultStrList.asmStr += (str + "\n");
 			resultStrList.asmByteSize += insn[i].size;
-			if (resultStrList.asmByteSize >= 5)
+			if (!isUseLongJump)
 			{
-				break;
+				if (resultStrList.asmByteSize >= sizeof(HookJmp))
+				{
+					break;
+				}
+			}
+			else
+			{
+				if (resultStrList.asmByteSize >= sizeof(HookJmpLong))
+				{
+					break;
+				}
 			}
 		}
 		cs_free(insn, count);
@@ -224,13 +234,13 @@ void FillNop(BYTE* resultData, size_t nopSize)
 	}
 }
 
-HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16Bytes, OriginalCodeLocation originalCodeLocation, LPCVOID jmpBackAddress)
+HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16Bytes, OriginalCodeLocation originalCodeLocation, bool isUseLongJump, LPCVOID jmpBackAddress)
 {
 	//if (hookAllocAddress.count(hookAddress) > 0)
 	//{
 	//	return false;
 	//}
-	DisAsmStr disAsmStr = HookDisAsm(hookAddress);
+	DisAsmStr disAsmStr = HookDisAsm(hookAddress,isUseLongJump);
 	if (disAsmStr.asmByteSize == 0)
 	{
 		return HookError::ErrorDisAsmFailed;
@@ -331,7 +341,7 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16
 	//XEDPARSE asmByte;
 	//asmByte.x64 = true;
 	int asmLen = 0;
-	BYTE asmByteArr[DISASM_SIZE + sizeof(HookCallByteArr) + sizeof(HookJmp)];
+	BYTE asmByteArr[DISASM_SIZE + sizeof(HookCallByteArr) + sizeof(HookJmpLong)];
 	//int hookCall = 0;
 	BYTE subRSPValue = isRSPAlign16Bytes ? 0x8 : 0x10;
 	switch (originalCodeLocation)
@@ -468,29 +478,57 @@ HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16
 		delete[] hookByteArr;
 		return HookError::ErrorBadParameter;
 	}
-	int hookJmpBack;
-	if (jmpBackAddress != (LPCVOID)-1)
+	if (!isUseLongJump)
 	{
-		hookJmpBack = ((long long)jmpBackAddress) - (long long)allocAddress - sizeof(HookCallByteArr) - asmLen - 5;
+		int hookJmpBack;
+		if (jmpBackAddress != (LPCVOID)-1)
+		{
+			hookJmpBack = ((long long)jmpBackAddress) - (long long)allocAddress - sizeof(HookCallByteArr) - asmLen - 5;
+		}
+		else
+		{
+			hookJmpBack = ((long long)hookAddress + disAsmStr.asmByteSize) - (long long)allocAddress - sizeof(HookCallByteArr) - asmLen - 5;
+		}
+		memcpy(asmByteArr + sizeof(HookCallByteArr) + asmLen, HookJmp, sizeof(HookJmp));
+		memcpy(asmByteArr + sizeof(HookCallByteArr) + asmLen + 1, &hookJmpBack, sizeof(hookJmpBack));
+		WriteProcessMemory(GetCurrentProcess(), allocAddress, asmByteArr, sizeof(HookCallByteArr) + sizeof(HookJmp) + asmLen, 0);
+		memcpy(defaultByteArr, hookAddress, disAsmStr.asmByteSize);
+		hookOriginalCode[hookAddress] = defaultByteArr;
+		hookOriginalCodeSize[hookAddress] = disAsmStr.asmByteSize;
+		hookAllocAddress[hookAddress] = allocAddress;
+		int hookJmpTo = (long long)allocAddress - (long long)hookAddress - 5;
+		memcpy(hookByteArr, HookJmp, sizeof(HookJmp));
+		memcpy(hookByteArr + 1, &hookJmpTo, sizeof(hookJmpTo));
+
+		FillNop(hookByteArr + sizeof(HookJmp), disAsmStr.asmByteSize - sizeof(HookJmp));
+
+		WriteProcessMemory(GetCurrentProcess(), hookAddress, hookByteArr, disAsmStr.asmByteSize, 0);
 	}
 	else
 	{
-		hookJmpBack = ((long long)hookAddress + disAsmStr.asmByteSize) - (long long)allocAddress - sizeof(HookCallByteArr) - asmLen - 5;
+		uint64_t hookJmpBack;
+		if (jmpBackAddress != (LPVOID)-1)
+		{
+			hookJmpBack = (uint64_t)jmpBackAddress;
+		}
+		else
+		{
+			hookJmpBack = ((uint64_t)hookAddress + disAsmStr.asmByteSize);
+		}
+		memcpy(asmByteArr + sizeof(HookCallByteArr) + asmLen, HookJmpLong, sizeof(HookJmpLong));
+		memcpy(asmByteArr + sizeof(HookCallByteArr) + asmLen + 6, &hookJmpBack, sizeof(hookJmpBack));
+		WriteProcessMemory(GetCurrentProcess(), allocAddress, asmByteArr, sizeof(HookCallByteArr) + sizeof(HookJmpLong) + asmLen, 0);
+		memcpy(defaultByteArr, hookAddress, disAsmStr.asmByteSize);
+		hookOriginalCode[hookAddress] = defaultByteArr;
+		hookOriginalCodeSize[hookAddress] = disAsmStr.asmByteSize;
+		hookAllocAddress[hookAddress] = allocAddress;
+		uint64_t hookJmpTo = (uint64_t)allocAddress;
+		memcpy(hookByteArr, HookJmpLong, sizeof(HookJmpLong));
+		memcpy(hookByteArr + 6, &hookJmpTo, sizeof(hookJmpTo));
+
+		FillNop(hookByteArr + sizeof(HookJmpLong), disAsmStr.asmByteSize - sizeof(HookJmpLong));
+		WriteProcessMemory(GetCurrentProcess(), hookAddress, hookByteArr, disAsmStr.asmByteSize, 0);
 	}
-	memcpy(asmByteArr + sizeof(HookCallByteArr) + asmLen, HookJmp, sizeof(HookJmp));
-	memcpy(asmByteArr + sizeof(HookCallByteArr) + asmLen + 1, &hookJmpBack, sizeof(hookJmpBack));
-	WriteProcessMemory(GetCurrentProcess(), allocAddress, asmByteArr, sizeof(HookCallByteArr) + sizeof(HookJmp) + asmLen, 0);
-	memcpy(defaultByteArr, hookAddress, disAsmStr.asmByteSize);
-	hookOriginalCode[hookAddress] = defaultByteArr;
-	hookOriginalCodeSize[hookAddress] = disAsmStr.asmByteSize;
-	hookAllocAddress[hookAddress] = allocAddress;
-	int hookJmpTo = (long long)allocAddress - (long long)hookAddress - 5;
-	memcpy(hookByteArr, HookJmp, sizeof(HookJmp));
-	memcpy(hookByteArr + 1, &hookJmpTo, sizeof(hookJmpTo));
-
-	FillNop(hookByteArr + sizeof(HookJmp), disAsmStr.asmByteSize - sizeof(HookJmp));
-
-	WriteProcessMemory(GetCurrentProcess(), hookAddress, hookByteArr, disAsmStr.asmByteSize, 0);
 	delete[] hookByteArr;
 	return HookError::ErrorOk;
 }
@@ -525,7 +563,7 @@ bool HookStop(LPVOID hookAddress)
 	return true;
 }
 
-HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
+HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc, bool isUseLongJump)
 {
 	for (std::map<LPVOID, LPVOID>::reverse_iterator iter = hookFuncAddress.rbegin(); iter != hookFuncAddress.rend(); iter++)
 	{
@@ -539,7 +577,7 @@ HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 		return HookError::ErrorHasHooked;
 	}
 	LPVOID oldFuncAddress = *oldFunc;
-	DisAsmStr disAsmStr = HookDisAsm(*oldFunc);
+	DisAsmStr disAsmStr = HookDisAsm(*oldFunc, isUseLongJump);
 	if (disAsmStr.asmByteSize == 0)
 	{
 		return HookError::ErrorDisAsmFailed;
@@ -593,9 +631,11 @@ HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 			}
 		}
 	}
-
-	memcpy(asmByteArr, HookJmpLong, sizeof(HookJmpLong));
-	memcpy(asmByteArr + 6, &newFunc, sizeof(newFunc));
+	if (!isUseLongJump)
+	{
+		memcpy(asmByteArr, HookJmpLong, sizeof(HookJmpLong));
+		memcpy(asmByteArr + 6, &newFunc, sizeof(newFunc));
+	}
 
 	asmjit::Environment env(asmjit::Arch::kX64);
 	asmjit::CodeHolder code;
@@ -628,19 +668,38 @@ HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc)
 	// Now you can print the code, which is stored in the first section (.text).
 
 	asmjit::CodeBuffer& codeBuffer = code.sectionById(0)->buffer();
-	uintptr_t hookJmpBack = ((uintptr_t)(*oldFunc) + disAsmStr.asmByteSize) - ((uintptr_t)allocAddress + codeBuffer.size() + sizeof(HookJmpLong)) - 5;
-	memcpy(asmByteArr + sizeof(HookJmpLong), codeBuffer.data(), codeBuffer.size());
-	memcpy(asmByteArr + sizeof(HookJmpLong) + codeBuffer.size(), HookJmp, sizeof(HookJmp));
-	memcpy(asmByteArr + sizeof(HookJmpLong) + codeBuffer.size() + 1, &hookJmpBack, sizeof(hookJmpBack));
-	WriteProcessMemory(GetCurrentProcess(), allocAddress, asmByteArr, sizeof(HookJmpLong) + codeBuffer.size() + sizeof(HookJmp), 0);
-	*oldFunc = (LPVOID)((uintptr_t)allocAddress + sizeof(HookJmpLong));
+	if (!isUseLongJump)
+	{
+		uintptr_t hookJmpBack = ((uintptr_t)(*oldFunc) + disAsmStr.asmByteSize) - ((uintptr_t)allocAddress + codeBuffer.size() + sizeof(HookJmpLong)) - 5;
+		memcpy(asmByteArr + sizeof(HookJmpLong), codeBuffer.data(), codeBuffer.size());
+		memcpy(asmByteArr + sizeof(HookJmpLong) + codeBuffer.size(), HookJmp, sizeof(HookJmp));
+		memcpy(asmByteArr + sizeof(HookJmpLong) + codeBuffer.size() + 1, &hookJmpBack, sizeof(hookJmpBack));
+		WriteProcessMemory(GetCurrentProcess(), allocAddress, asmByteArr, sizeof(HookJmpLong) + codeBuffer.size() + sizeof(HookJmp), 0);
+		*oldFunc = (LPVOID)((uintptr_t)allocAddress + sizeof(HookJmpLong));
 
-	int hookJmpTo = (uintptr_t)allocAddress - (int)oldFuncAddress - 5;
-	memcpy(hookByteArr, HookJmp, sizeof(HookJmp));
-	memcpy(hookByteArr + 1, &hookJmpTo, sizeof(hookJmpTo));
+		int hookJmpTo = (uintptr_t)allocAddress - (int)oldFuncAddress - 5;
+		memcpy(hookByteArr, HookJmp, sizeof(HookJmp));
+		memcpy(hookByteArr + 1, &hookJmpTo, sizeof(hookJmpTo));
 
-	FillNop(hookByteArr + sizeof(HookJmp), disAsmStr.asmByteSize - sizeof(HookJmp));
-	WriteProcessMemory(GetCurrentProcess(), oldFuncAddress, hookByteArr, disAsmStr.asmByteSize, 0);
+		FillNop(hookByteArr + sizeof(HookJmp), disAsmStr.asmByteSize - sizeof(HookJmp));
+		WriteProcessMemory(GetCurrentProcess(), oldFuncAddress, hookByteArr, disAsmStr.asmByteSize, 0);
+	}
+	else
+	{
+		uint64_t hookJmpBack = ((uint64_t)(*oldFunc) + disAsmStr.asmByteSize);
+		memcpy(asmByteArr, codeBuffer.data(), codeBuffer.size());
+		memcpy(asmByteArr + codeBuffer.size(), HookJmpLong, sizeof(HookJmpLong));
+		memcpy(asmByteArr + codeBuffer.size()+ 6, &hookJmpBack, sizeof(hookJmpBack));
+		WriteProcessMemory(GetCurrentProcess(), allocAddress, asmByteArr, codeBuffer.size() + sizeof(HookJmpLong), 0);
+		*oldFunc = (LPVOID)((uintptr_t)allocAddress);
+
+		uint64_t hookJmpTo = (uint64_t)newFunc;
+		memcpy(hookByteArr, HookJmpLong, sizeof(HookJmpLong));
+		memcpy(hookByteArr + 6, &hookJmpTo, sizeof(hookJmpTo));
+
+		FillNop(hookByteArr + sizeof(HookJmpLong), disAsmStr.asmByteSize - sizeof(HookJmpLong));
+		WriteProcessMemory(GetCurrentProcess(), oldFuncAddress, hookByteArr, disAsmStr.asmByteSize, 0);
+	}
 
 	hookFuncOriginalCode[*oldFunc] = defaultByteArr;
 	hookFuncOriginalCodeSize[*oldFunc] = disAsmStr.asmByteSize;

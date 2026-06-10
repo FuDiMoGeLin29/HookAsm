@@ -224,7 +224,7 @@ public:
 
 long long htoi64(const char* _String);
 
-DisAsmStr HookDisAsm(LPVOID address);
+DisAsmStr HookDisAsm(LPVOID address, bool isUseLongJump = false);
 
 #define DISASM_SIZE 60
 
@@ -288,7 +288,7 @@ static_assert(sizeof(FXSAVE64_Area) >= 512, "FXSAVE64_Area size error");
 /// <param name="originalCodeLocation">被Hook的原代码位置</param>
 /// <param name="jmpBackAddress">Hook回跳地址</param>
 /// <returns>Hook结果</returns>
-HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16Bytes = true, OriginalCodeLocation originalCodeLocation = OriginalCodeLocation_Behind, LPCVOID jmpBackAddress = (LPCVOID)-1);
+HookError HookBegin(LPVOID hookAddress, HookCallBack callBack, bool isRSPAlign16Bytes = true, OriginalCodeLocation originalCodeLocation = OriginalCodeLocation_Behind,bool isUseLongJump = false, LPCVOID jmpBackAddress = (LPCVOID)-1);
 
 /// <summary>
 /// 停止Hook(Asm版本)
@@ -303,7 +303,7 @@ bool HookStop(LPVOID hookAddress);
 /// <param name="newFunc">新函数</param>
 /// <param name="oldFunc">[in,out]存储要Hook的旧函数，并返回调用后不会产生递归的函数指针</param>
 /// <returns>Hook结果</returns>
-HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc);
+HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc,bool isUseLongJump = false);
 
 /// <summary>
 /// 停止Hook(Hook函数版本)

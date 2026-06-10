@@ -142,7 +142,7 @@ DisAsmStr HookDisAsm(LPVOID address)
 			}
 			resultStr.asmStr += asmMnemonic + " " + asmOp_Str + "\n";
 			resultStr.asmByteSize += insn[i].size;
-			if (resultStr.asmByteSize >= 5)
+			if (resultStr.asmByteSize >= sizeof(HookJmp))
 			{
 				break;
 			}
