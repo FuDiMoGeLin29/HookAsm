@@ -96,24 +96,28 @@ struct Register
 		int64_t rdi;
 		int32_t edi;
 		int16_t di;
+		int8_t dil;
 	};
 	union
 	{
 		int64_t rsi;
 		int32_t esi;
 		int16_t si;
+		int8_t sil;
 	};
 	union
 	{
 		int64_t rbp;
 		int32_t ebp;
 		int16_t bp;
+		int8_t bpl;
 	};
 	union
 	{
 		int64_t rsp;
 		int32_t esp;
 		int16_t sp;
+		int8_t spl;
 	};
 	union
 	{
