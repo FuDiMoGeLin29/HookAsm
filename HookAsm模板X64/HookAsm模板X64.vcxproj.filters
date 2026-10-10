@@ -16,23 +16,26 @@
     <Filter Include="HookAsm">
       <UniqueIdentifier>{824b1759-1419-42da-bb6c-5da0a4702ba1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HookAsm\asmtk">
-      <UniqueIdentifier>{1844dfab-845f-4b6c-9190-22f650f57f96}</UniqueIdentifier>
+    <Filter Include="HookAsm\Zydis">
+      <UniqueIdentifier>{7b8d954c-67d5-4177-88d2-8c8c7f5ee956}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HookAsm\asmtk\asmjit">
-      <UniqueIdentifier>{873bb3bb-36a9-4cf9-8239-454631023081}</UniqueIdentifier>
+    <Filter Include="HookAsm\asmjit">
+      <UniqueIdentifier>{57157b39-b644-4123-b9d9-7ae49716752b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HookAsm\asmtk\asmjit\arm">
-      <UniqueIdentifier>{4445e2b4-b073-47c8-b4d3-689f109b2a01}</UniqueIdentifier>
+    <Filter Include="HookAsm\asmjit\arm">
+      <UniqueIdentifier>{f3641bb8-0d83-4b6e-8136-bf90136bd700}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HookAsm\asmtk\asmjit\core">
-      <UniqueIdentifier>{62fd9260-491b-4179-bf0d-e5ada269479c}</UniqueIdentifier>
+    <Filter Include="HookAsm\asmjit\axl">
+      <UniqueIdentifier>{0e313336-ccb1-4081-8258-d1e4a8f3fee2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HookAsm\asmtk\asmjit\x86">
-      <UniqueIdentifier>{c8456c9a-e537-40d4-95fe-95478152a5f8}</UniqueIdentifier>
+    <Filter Include="HookAsm\asmjit\core">
+      <UniqueIdentifier>{4558a5c3-b5da-4e6c-b61b-92a1afdb397b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HookAsm\capstone">
-      <UniqueIdentifier>{69cb0631-d161-43e2-a530-7be41903d394}</UniqueIdentifier>
+    <Filter Include="HookAsm\asmjit\ujit">
+      <UniqueIdentifier>{1ed67fbf-2c79-47fd-9de0-026920a4c8ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HookAsm\asmjit\x86">
+      <UniqueIdentifier>{1ddfc46f-2d32-4347-802b-68b4629cb360}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,353 +51,374 @@
     <ClInclude Include="HookAsm\HookAsmCodeHeap.h">
       <Filter>HookAsm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmparser.h">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClInclude Include="HookAsm\Zydis\Zydis.h">
+      <Filter>HookAsm\Zydis</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmtk.h">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClInclude Include="HookAsm\asmjit\a64.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmtokenizer.h">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\elfdefs.h">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClInclude Include="HookAsm\asmjit\asmjit.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\globals.h">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClInclude Include="HookAsm\asmjit\build_scope_begin.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\parserutils.h">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClInclude Include="HookAsm\asmjit\build_scope_end.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\strtod.h">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClInclude Include="HookAsm\asmjit\core.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\a64.h">
-      <Filter>HookAsm\asmtk\asmjit</Filter>
+    <ClInclude Include="HookAsm\asmjit\host.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm.h">
-      <Filter>HookAsm\asmtk\asmjit</Filter>
+    <ClInclude Include="HookAsm\asmjit\ujit.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\asmjit.h">
-      <Filter>HookAsm\asmtk\asmjit</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86.h">
+      <Filter>HookAsm\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\asmjit-scope-begin.h">
-      <Filter>HookAsm\asmtk\asmjit</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_arch_traits_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\asmjit-scope-end.h">
-      <Filter>HookAsm\asmtk\asmjit</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_assembler.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core.h">
-      <Filter>HookAsm\asmtk\asmjit</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_builder.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86.h">
-      <Filter>HookAsm\asmtk\asmjit</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_compiler.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64archtraits_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_emit_helper_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64assembler.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_emitter.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64builder.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_formatter_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64compiler.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_func_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64emithelper_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_globals.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64emitter.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_inst_api_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64formatter_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_inst_db.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64func_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_inst_db_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64globals.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_operand.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64instapi_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\a64_ra_pass_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64instdb.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\arm_formatter_p.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64instdb_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\arm_globals.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64operand.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\arm\arm_utils.h">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64rapass_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\algorithm.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\a64utils.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\armformatter_p.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena_bit_set_p.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\armglobals.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena_hash.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\arm\armoperand.h">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena_list.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\api-build_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena_pool.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\api-config.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena_string.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\archcommons.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena_tree.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\archtraits.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\arena_vector.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\assembler.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\bit_set_utils.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\builder.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\build_integration.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\codebuffer.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\commons.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\codeholder.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\inplace_array.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\codewriter_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\inplace_bit_set.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\compiler.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\inplace_queue.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\compilerdefs.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\inplace_stack.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\constpool.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\inplace_storage.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\cpuinfo.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\inplace_string.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\emithelper_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\span.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\emitter.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\string_index.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\emitterutils_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\string_utils.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\environment.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\axl\support_p.h">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\errorhandler.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\arch_commons.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\formatter.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\arch_traits.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\formatter_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\assembler.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\func.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\build_defs.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\funcargscontext_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\build_export_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\globals.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\builder.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\inst.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\builder_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\jitallocator.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\code_buffer.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\jitruntime.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\code_holder.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\logger.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\code_writer_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\misc_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\compiler.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\operand.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\compiler_defs.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\osutils.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\const_pool.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\osutils_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\cpu_info.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\raassignment_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\debug_utils.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\rabuilders_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\emit_helper_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\radefs_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\emitter.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\ralocal_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\emitter_utils_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\rapass_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\environment.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\rastack_p.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\error.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\string.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\error_handler.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\support.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\fixup.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\target.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\formatter.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\type.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\formatter_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\virtmem.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\func.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\zone.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\func_args_context_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonehash.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\globals.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonelist.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\inst.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonestack.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\inst_db_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonestring.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\jit_allocator.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonetree.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\jit_runtime.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\core\zonevector.h">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\logger.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86archtraits_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\misc_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86assembler.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\operand.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86builder.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\os_utils.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86compiler.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\os_utils_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86emithelper_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\pauth.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86emitter.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\pauth_utils_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86formatter_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_assignment_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86func_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_cfg_block_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86globals.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_cfg_builder_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86instapi_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_constraints_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86instdb.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_defs_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86instdb_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_inst_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86opcode_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_local_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86operand.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_pass_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\asmtk\asmjit\x86\x86rapass_p.h">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_reg_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\arm.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\ra_stack_p.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\arm64.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\string.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\bpf.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\target.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\capstone.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\type.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\evm.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\core\virt_mem.h">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\m68k.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_arch_traits_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\m680x.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_assembler.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\mips.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_builder.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\mos65xx.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_compiler.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\platform.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_emit_helper_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\ppc.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_emitter.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\riscv.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_formatter_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\sh.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_func_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\sparc.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_globals.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\systemz.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_inst_api_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\tms320c64x.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_inst_db.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\tricore.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_inst_db_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\wasm.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_opcode_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\x86.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_operand.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
     </ClInclude>
-    <ClInclude Include="HookAsm\capstone\xcore.h">
-      <Filter>HookAsm\capstone</Filter>
+    <ClInclude Include="HookAsm\asmjit\x86\x86_ra_pass_p.h">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="HookAsm\asmjit\ujit\ujit_base.h">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClInclude>
+    <ClInclude Include="HookAsm\asmjit\ujit\uni_compiler.h">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClInclude>
+    <ClInclude Include="HookAsm\asmjit\ujit\uni_compiler_utils_p.h">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClInclude>
+    <ClInclude Include="HookAsm\asmjit\ujit\uni_condition.h">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClInclude>
+    <ClInclude Include="HookAsm\asmjit\ujit\uni_op.h">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClInclude>
+    <ClInclude Include="HookAsm\asmjit\ujit\vec_const_table.h">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClInclude>
+    <ClInclude Include="HookAsm\HookRelocator.h">
+      <Filter>HookAsm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -410,185 +434,251 @@
     <ClCompile Include="HookAsm\HookAsmCodeHeap.cpp">
       <Filter>HookAsm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmparser.cpp">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClCompile Include="HookAsm\Zydis\Zydis.c">
+      <Filter>HookAsm\Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmtokenizer.cpp">
-      <Filter>HookAsm\asmtk</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_assembler.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64assembler.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_builder.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64builder.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_compiler.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64compiler.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_emit_helper.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64emithelper.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_formatter.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64formatter.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_func.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64func.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_inst_api.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64instapi.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_inst_db.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64instdb.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_inst_test.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64operand.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_operand_test.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\a64rapass.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\a64_ra_pass.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\arm\armformatter.cpp">
-      <Filter>HookAsm\asmtk\asmjit\arm</Filter>
+    <ClCompile Include="HookAsm\asmjit\arm\arm_formatter.cpp">
+      <Filter>HookAsm\asmjit\arm</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\archtraits.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\algorithm_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\assembler.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\builder.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_bit_set.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\codeholder.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_bit_set_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\codewriter.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_hash.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\compiler.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_hash_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\constpool.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_list_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\cpuinfo.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\emithelper.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_tree_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\emitter.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_vector.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\emitterutils.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\arena_vector_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\environment.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\bit_set_utils_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\errorhandler.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\commons_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\formatter.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\string_index_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\func.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\axl\string_utils_test.cpp">
+      <Filter>HookAsm\asmjit\axl</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\funcargscontext.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\arch_traits.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\globals.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\assembler.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\inst.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\builder.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\jitallocator.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\code_holder.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\jitruntime.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\code_holder_test.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\logger.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\code_writer.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\operand.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\compiler.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\osutils.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\const_pool.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\ralocal.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\const_pool_test.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\rapass.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\cpu_info.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\rastack.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\debug_utils.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\string.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\emit_helper.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\support.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\emitter.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\target.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\emitter_utils.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\type.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\environment.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\virtmem.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\error.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\zone.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\error_handler.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonehash.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\formatter.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonelist.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\func.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonestack.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\func_args_context.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonetree.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\func_test.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\core\zonevector.cpp">
-      <Filter>HookAsm\asmtk\asmjit\core</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\inst.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86assembler.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\inst_db.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86builder.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\jit_allocator.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86compiler.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\jit_allocator_test.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86emithelper.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\jit_runtime.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86formatter.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\logger.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86func.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\operand_test.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86instapi.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\os_utils.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86instdb.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\pauth.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86operand.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\ra_local.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
     </ClCompile>
-    <ClCompile Include="HookAsm\asmtk\asmjit\x86\x86rapass.cpp">
-      <Filter>HookAsm\asmtk\asmjit\x86</Filter>
+    <ClCompile Include="HookAsm\asmjit\core\ra_pass.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\core\ra_stack.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\core\string.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\core\string_test.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\core\target.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\core\type.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\core\virt_mem.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\core\virt_mem_test.cpp">
+      <Filter>HookAsm\asmjit\core</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_assembler.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_builder.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_compiler.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_emit_helper.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_formatter.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_func.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_inst_api.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_inst_db.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_inst_test.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_operand_test.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\x86\x86_ra_pass.cpp">
+      <Filter>HookAsm\asmjit\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\ujit\uni_compiler_a64.cpp">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\ujit\uni_compiler_x86.cpp">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\asmjit\ujit\vec_const_table.cpp">
+      <Filter>HookAsm\asmjit\ujit</Filter>
+    </ClCompile>
+    <ClCompile Include="HookAsm\HookRelocator.cpp">
+      <Filter>HookAsm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -597,8 +687,13 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="HookAsm\capstone\capstone.lib">
-      <Filter>HookAsm\capstone</Filter>
-    </Library>
+    <Natvis Include="HookAsm\asmjit\asmjit.natvis">
+      <Filter>HookAsm\asmjit</Filter>
+    </Natvis>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HookAsm\asmjit\axl\README.md">
+      <Filter>HookAsm\asmjit\axl</Filter>
+    </None>
   </ItemGroup>
 </Project>

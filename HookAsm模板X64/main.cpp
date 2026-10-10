@@ -3,6 +3,8 @@
 
 namespace Main
 {
+	using namespace HookAsm;
+
 	void init_hook()
 	{
 		//这里写初始化Hook的代码
