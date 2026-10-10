@@ -163,17 +163,32 @@ namespace HookAsm {
             return true;
         }
 
+        // ============================================================
+        // LOOP 家族展开（32 位版本）
+        //   - loop / loope / loopne: 默认 ECX，66 前缀后为 CX
+        //   - jcxz: 16 位计数器（CX）
+        //   - jecxz: 32 位计数器（ECX）
+        // 关键：rel32 回填位置
+        //   E9 (1 字节 opcode):  rel 在 opcode 偏移 +1
+        //   0F 8x (2 字节 opcode): rel 在 opcode 偏移 +2
+        // ============================================================
         bool EncodeLoop32(const Instruction& info, uint64_t newAddr,
             std::vector<uint8_t>& out)
         {
             const uint64_t target = info.target;
             const bool c16 = Uses16BitCounter(info);
 
+            // ---------- LOOP ----------
             if (info.insn.mnemonic == ZYDIS_MNEMONIC_LOOP) {
                 if (!c16) {
+                    // pushfd ; dec ecx ; jz .pop ; popfd ; jmp target ; .pop: popfd
                     uint8_t code[12] = {
-                        0x9C, 0xFF, 0xC9, 0x74, 0x06, 0x9D,
-                        0xE9, 0, 0, 0, 0, 0x9D
+                        0x9C,                          // 0
+                        0xFF, 0xC9,                    // 1-2
+                        0x74, 0x06,                    // 3-4
+                        0x9D,                          // 5
+                        0xE9, 0, 0, 0, 0,              // 6-10  (E9 at +6, rel at +7)
+                        0x9D                           // 11
                     };
                     int64_t rel = (int64_t)target - (int64_t)(newAddr + 11);
                     if (rel < INT32_MIN || rel > INT32_MAX) return false;
@@ -182,9 +197,14 @@ namespace HookAsm {
                     out.insert(out.end(), code, code + 12);
                 }
                 else {
+                    // pushfd ; dec cx ; jz .pop ; popfd ; jmp target ; .pop: popfd
                     uint8_t code[13] = {
-                        0x9C, 0x66, 0xFF, 0xC9, 0x74, 0x06, 0x9D,
-                        0xE9, 0, 0, 0, 0, 0x9D
+                        0x9C,                          // 0
+                        0x66, 0xFF, 0xC9,              // 1-3
+                        0x74, 0x06,                    // 4-5
+                        0x9D,                          // 6
+                        0xE9, 0, 0, 0, 0,              // 7-11  (rel at +8)
+                        0x9D                           // 12
                     };
                     int64_t rel = (int64_t)target - (int64_t)(newAddr + 12);
                     if (rel < INT32_MIN || rel > INT32_MAX) return false;
@@ -195,45 +215,67 @@ namespace HookAsm {
                 return true;
             }
 
+            // ---------- LOOPE / LOOPNE ----------
             const bool isE = (info.insn.mnemonic == ZYDIS_MNEMONIC_LOOPE);
             const uint8_t jccOp = isE ? 0x84 : 0x85;
 
             if (!c16) {
+                // ECX 版本：偏移 0~5 前置，0F 8x 在 +6，rel 在 +8
                 uint8_t code[18] = {
-                    0x9C, 0xFF, 0xC9, 0x74, 0x0C, 0x9D,
-                    0x0F, jccOp, 0, 0, 0, 0,
-                    0xE9, 0x01, 0x00, 0x00, 0x00, 0x9D
+                    0x9C,                          // 0
+                    0xFF, 0xC9,                    // 1-2
+                    0x74, 0x0C,                    // 3-4
+                    0x9D,                          // 5
+                    0x0F, jccOp, 0, 0, 0, 0,       // 6-11  (0F 8x at +6, rel at +8)
+                    0xE9, 0x01, 0x00, 0x00, 0x00,  // 12-16 (jmp +1)
+                    0x9D                           // 17
                 };
                 int64_t rel = (int64_t)target - (int64_t)(newAddr + 12);
                 if (rel < INT32_MIN || rel > INT32_MAX) return false;
                 int32_t r32 = (int32_t)rel;
-                std::memcpy(code + 7, &r32, 4);
+                std::memcpy(code + 8, &r32, 4);   // ← 修复：7 → 8
                 out.insert(out.end(), code, code + 18);
             }
             else {
+                // CX 版本：偏移 0~6 前置，0F 8x 在 +7，rel 在 +9
                 uint8_t code[19] = {
-                    0x9C, 0x66, 0xFF, 0xC9, 0x74, 0x0C, 0x9D,
-                    0x0F, jccOp, 0, 0, 0, 0,
-                    0xE9, 0x01, 0x00, 0x00, 0x00, 0x9D
+                    0x9C,                          // 0
+                    0x66, 0xFF, 0xC9,              // 1-3
+                    0x74, 0x0C,                    // 4-5
+                    0x9D,                          // 6
+                    0x0F, jccOp, 0, 0, 0, 0,       // 7-12  (0F 8x at +7, rel at +9)
+                    0xE9, 0x01, 0x00, 0x00, 0x00,  // 13-17 (jmp +1)
+                    0x9D                           // 18
                 };
                 int64_t rel = (int64_t)target - (int64_t)(newAddr + 13);
                 if (rel < INT32_MIN || rel > INT32_MAX) return false;
                 int32_t r32 = (int32_t)rel;
-                std::memcpy(code + 8, &r32, 4);
+                std::memcpy(code + 9, &r32, 4);   // ← 修复：8 → 9
                 out.insert(out.end(), code, code + 19);
             }
             return true;
         }
 
+        // ============================================================
+        // JCXZ / JECXZ 展开（32 位版本）
+        //   JCXZ : 16 位计数器，需要 66 前缀 test cx, cx
+        //   JECXZ: 32 位计数器，test ecx, ecx
+        // 两者的 jmp 都是 E9 单字节 opcode，rel 紧随其后。
+        // ============================================================
         bool EncodeJcxz32(const Instruction& info, uint64_t newAddr,
             std::vector<uint8_t>& out)
         {
             const uint64_t target = info.target;
 
             if (info.insn.mnemonic == ZYDIS_MNEMONIC_JCXZ) {
+                // pushfd ; test cx,cx ; jnz .skip ; popfd ; jmp target ; .skip: popfd
                 uint8_t code[13] = {
-                    0x9C, 0x66, 0x85, 0xC9, 0x75, 0x06, 0x9D,
-                    0xE9, 0, 0, 0, 0, 0x9D
+                    0x9C,                          // 0
+                    0x66, 0x85, 0xC9,              // 1-3
+                    0x75, 0x06,                    // 4-5
+                    0x9D,                          // 6
+                    0xE9, 0, 0, 0, 0,              // 7-11 (rel at +8)
+                    0x9D                           // 12
                 };
                 int64_t rel = (int64_t)target - (int64_t)(newAddr + 12);
                 if (rel < INT32_MIN || rel > INT32_MAX) return false;
@@ -242,9 +284,14 @@ namespace HookAsm {
                 out.insert(out.end(), code, code + 13);
             }
             else {
+                // pushfd ; test ecx,ecx ; jnz .skip ; popfd ; jmp target ; .skip: popfd
                 uint8_t code[12] = {
-                    0x9C, 0x85, 0xC9, 0x75, 0x06, 0x9D,
-                    0xE9, 0, 0, 0, 0, 0x9D
+                    0x9C,                          // 0
+                    0x85, 0xC9,                    // 1-2
+                    0x75, 0x06,                    // 3-4
+                    0x9D,                          // 5
+                    0xE9, 0, 0, 0, 0,              // 6-10 (rel at +7)
+                    0x9D                           // 11
                 };
                 int64_t rel = (int64_t)target - (int64_t)(newAddr + 11);
                 if (rel < INT32_MIN || rel > INT32_MAX) return false;
@@ -286,9 +333,6 @@ namespace HookAsm {
 
     } // anonymous namespace
 
-    // ============================================================
-    // 接口 1：反汇编
-    // ============================================================
     std::optional<DisasmResult> HookRelocator32::Disassemble(
         uint64_t sourceAddr, size_t minBytes)
     {
@@ -347,9 +391,6 @@ namespace HookAsm {
         return result;
     }
 
-    // ============================================================
-    // 接口 2：重定位汇编
-    // ============================================================
     std::optional<RelocResult> HookRelocator32::RelocateTo(
         const std::vector<Instruction>& instructions, uint64_t targetAddr)
     {

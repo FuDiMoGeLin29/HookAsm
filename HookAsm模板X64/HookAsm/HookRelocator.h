@@ -25,20 +25,18 @@ namespace HookAsm {
         ZydisDecodedOperand     operands[ZYDIS_MAX_OPERAND_COUNT]{};
     };
 
-    // 反汇编结果
     struct DisasmResult
     {
-        std::vector<Instruction> instructions;    // 按执行顺序排列
-        size_t                   totalBytes = 0; // 原始代码被覆盖的总字节数
-        size_t                   totalNewLength = 0; // 重定位后 trampoline 的总字节数
+        std::vector<Instruction> instructions;
+        size_t                   totalBytes = 0;
+        size_t                   totalNewLength = 0;
     };
 
-    // 重定位结果
     struct RelocResult
     {
-        std::vector<uint8_t> bytes;             // trampoline 字节流
-        size_t               stolenBytes = 0;  // 原始代码被消耗的字节数
-        size_t               totalNewLength = 0; // = bytes.size()
+        std::vector<uint8_t> bytes;
+        size_t               stolenBytes = 0;
+        size_t               totalNewLength = 0;
     };
 
     class HookRelocator
