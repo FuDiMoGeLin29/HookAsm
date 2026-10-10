@@ -76,7 +76,7 @@ HookAsm 是一个指令级 Hook 库。与传统的函数级 Hook 不同，它可
 | 函数级 Hook | ✅ | ✅ | 传统函数 Hook，可拿到“不递归”的原函数指针 |
 | 原代码执行位置控制 | ✅ | ✅ | 前置 / 后置 / 不执行原代码 |
 | 自定义回跳地址 | ✅ | ✅ | Hook 后跳转到指定地址 |
-| 同一地址重复 Hook | ✅ | ✅ | 内部按栈结构记录，按后进先出卸载 |
+| 同一地址重复 Hook | ✅ | ✅ | 内部按地址入栈记录；`HookStop` 每次卸载最近安装的一层 |
 | x64 长跳转模式 | — | ✅ | `isUseLongJump`，用 14 字节绝对跳转替代 ±2GB 相对跳转 |
 
 ### 高级特性
@@ -285,7 +285,11 @@ struct RelocResult  { std::vector<uint8_t> bytes; size_t stolenBytes; size_t tot
 | `hookAllocAddresses` | 跳板所在的可执行内存地址 |
 | `hookFuncAddresses / hookFuncOriginalCodes / hookFuncAllocAddresses` | 函数 Hook 的对应记录 |
 
-由于使用栈（stack）保存，同一地址可以重复 Hook，并且必须按后进先出的顺序调用 `HookStop` 卸载。这些容器都是普通全局容器，**不保证线程安全**。
+**指令级 Hook（`HookBegin` / `HookStop`）**：以 Hook 地址为键，`HookStop(hookAddress)` 内部固定取 `top()`，即**总是卸载该地址上最近一次安装的那一层**。因为 `HookStop` 只接受地址、不接受“卸载哪一个”的标识，同一地址多次 Hook 时并不存在“顺序传错”的可能：调用一次就出栈一层，恢复该层的备份字节并释放对应的跳板。需要注意，第二层的“原始字节”备份的实际是第一层写入的跳转字节，所以弹出一层等于回到上一层 Hook，而不是回到最初的原始代码。
+
+**函数级 Hook（`HookFunctionBegin` / `HookFunctionStop`）**：以 `*oldFunc`（即 `HookFunctionBegin` 写回的跳板指针）为键，每次 Hook 都会生成**独立**的跳板，而且新跳板会链接到旧跳板（搬迁过来的跳转指令仍然指向旧跳板）。因此这里必须按与安装**相反的顺序**调用 `HookFunctionStop(&oldFunc)`：否则会先恢复最初的函数字节、释放仍被引用的旧跳板，随后再把“备份字节”（其实是上一层写入的跳转）写回函数头，留下指向已释放内存的跳转。
+
+这些容器都是普通全局容器，**不保证线程安全**。
 
 ---
 
@@ -664,7 +668,7 @@ enum HookError : int
 };
 ~~~
 
-> `ErrorHasHooked` / `ErrorHasHookedNear` 已从枚举中移除；同一地址重复 Hook 现在是允许的，按栈结构记录。
+> `ErrorHasHooked` / `ErrorHasHookedNear` 已从枚举中移除；同一地址重复 Hook 现在是允许的，内部按地址入栈记录。
 
 ### 核心函数
 
@@ -696,6 +700,8 @@ HookError HookBegin(
 bool HookStop(LPVOID hookAddress);   // 传入之前 Hook 的地址
 ~~~
 
+> `HookStop` 以地址为唯一标识，内部总是卸载该地址上**最近一次**安装的 Hook（相当于出栈一层），因此无需自行记录安装顺序，也不可能“卸载顺序传错”；代价是无法指定卸载更早的那一层。
+
 #### `HookFunctionBegin` —— 安装函数级 Hook
 
 ~~~cpp
@@ -713,6 +719,8 @@ HookError HookFunctionBegin(LPVOID newFunc, LPVOID* oldFunc, bool isUseLongJump 
 ~~~cpp
 bool HookFunctionStop(LPVOID* oldFunc);   // 传入 HookFunctionBegin 输出的指针
 ~~~
+
+> 与 `HookStop` 不同，这里必须以 `HookFunctionBegin` 输出的**跳板指针**为标识，并且必须**按与安装相反的顺序**卸载：每个跳板都会链到上一个跳板，提前释放旧跳板会让新跳板跳向已释放的内存。
 
 ### 回调类型
 
@@ -1051,8 +1059,8 @@ void SafeHookStop(LPVOID addr)
 
 ### 重要注意事项
 
-1. **备份原代码**：`HookBegin` 内部会备份原字节供 `HookStop` 恢复，但不要在多处重复 Hook 同一区域后随意卸载。
-2. **后进先出卸载**：同一地址多次 Hook 时，`HookStop` 必须按相反顺序调用。
+1. **备份原代码**：`HookBegin` 备份的是“Hook 那一刻”该地址的字节，因此同一区域嵌套 Hook 时，卸载一层只会回到上一层 Hook，而不是直接回到最初代码（详见“核心模块详解 → Hook 生命周期”）。
+2. **分层卸载**：`HookStop(addr)` 只按地址出栈，总是卸载最近安装的一层，不需要也无法自行指定顺序；而 `HookFunctionStop(&oldFunc)` 以 `HookFunctionBegin` 输出的跳板指针为标识，**必须按与安装相反的顺序**卸载。
 3. **避免递归 Hook**：回调中不要调用被 Hook 的函数（函数 Hook 请使用 `oldFunc` 返回的指针）。
 4. **栈平衡**：修改 ESP/RSP 时确保栈平衡。
 5. **线程安全**：全局容器无锁；修改代码页时请自行暂停 / 同步其他线程。
