@@ -3,11 +3,13 @@
 
 namespace Main
 {
+	using namespace HookAsm;
+
 	void init_hook()
 	{
 		//这里写初始化Hook的代码
 		//例如：HookBegin((LPVOID)0x114514,Hookcallback);
-
+		
 	}
 
 	void run()
