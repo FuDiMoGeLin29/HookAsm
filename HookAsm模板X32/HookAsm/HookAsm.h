@@ -37,11 +37,16 @@ namespace HookAsm
 		OriginalCodeLocation_Without,
 	};
 
-	typedef DWORD Eflags;
+	typedef uint32_t Eflags;
+	typedef uint16_t Flags;
 
 	struct Register
 	{
-		Eflags eflags;
+		union
+		{
+			Eflags eflags;
+			Flags flags;
+		};
 		union
 		{
 			int32_t edi;
@@ -161,9 +166,9 @@ namespace HookAsm
 	int htoi(const char* _String);
 
 	//使用汇编cmp指令取得标志位
-	Eflags Asm_Cmp(int num1, int num2);
+	Eflags Asm_Cmp(int32_t num1, int32_t num2);
 	//使用汇编test指令取得标志位
-	Eflags Asm_Test(int num1, int num2);
+	Eflags Asm_Test(int32_t num1, int32_t num2);
 	//保存全部浮点数寄存器
 	FXSAVE_Area Asm_Fxsave();
 	//恢复全部浮点数寄存器

@@ -496,7 +496,7 @@ namespace HookAsm
 		return true;
 	}
 
-	Eflags Asm_Cmp(int num1, int num2)
+	Eflags Asm_Cmp(int32_t num1, int32_t num2)
 	{
 		Eflags result;
 		_asm
@@ -509,7 +509,7 @@ namespace HookAsm
 		return result;
 	}
 
-	Eflags Asm_Test(int num1, int num2)
+	Eflags Asm_Test(int32_t num1, int32_t num2)
 	{
 		Eflags result;
 		_asm

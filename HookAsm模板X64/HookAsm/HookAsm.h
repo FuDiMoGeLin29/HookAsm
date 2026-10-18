@@ -34,7 +34,9 @@ namespace HookAsm
 		OriginalCodeLocation_Without,
 	};
 
-	typedef DWORD64 Eflags;
+	typedef uint64_t Rflags;
+	typedef uint32_t Eflags;
+	typedef uint16_t Flags;
 
 	struct Register
 	{
@@ -166,7 +168,12 @@ namespace HookAsm
 				int8_t ah;
 			};
 		};
-		Eflags eflags;
+		union
+		{
+			Rflags rflags;
+			Eflags eflags;
+			Flags flags;
+		};
 		union
 		{
 			//该寄存器修改不能和rsp/esp/sp寄存器修改共存，修改它会导致rsp/esp/sp寄存器修改失效
@@ -229,9 +236,9 @@ namespace HookAsm
 	extern "C"
 	{
 		//使用汇编cmp指令取得标志位
-		Eflags _stdcall Asm_Cmp(long long num1, long long num2);
+		Rflags _stdcall Asm_Cmp(int64_t num1, int64_t num2);
 		//使用汇编test指令取得标志位
-		Eflags _stdcall Asm_Test(long long num1, long long num2);
+		Rflags _stdcall Asm_Test(int64_t num1, int64_t num2);
 	}
 
 #endif
